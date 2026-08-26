@@ -36,10 +36,26 @@
      box is resized, every overlay inside keeps its own coordinates. */
   :root{ --scene-h:56dvh }
 
+  /* ── ONE SHARED WIDTH ─────────────────────────────────────────────
+     The render and the branch list are sized by a single rule, so their
+     left and right edges are the same edges. --zone-width is resolved
+     from the same three limits for both: the width available inside the
+     shell, the 1440px cap, and the width the height budget allows at the
+     scene's 1024×576 ratio. Because the value is one expression used in
+     one place, the two boxes cannot drift apart at any viewport size or
+     browser zoom level — a zoom step changes what 100%, 1440px and dvh
+     resolve to, and it changes them identically for both. */
+  :root{ --zone-width: min(100%, 1440px, calc(var(--scene-h) * 1024 / 576)) }
+
+  .zone-scene,
+  .zone-branches{
+    width:var(--zone-width);
+    max-width:100%;
+    margin-left:auto; margin-right:auto;
+  }
+
   .zone-scene{
     position:relative; flex:0 0 auto;
-    width:min(100%, 1440px, calc(var(--scene-h) * 1024 / 576));
-    margin:0 auto;
     aspect-ratio:1024/576; overflow:hidden; background:#02070b;
     border:1px solid rgba(156,183,198,.24);
     box-shadow:0 24px 70px rgba(0,0,0,.46), inset 0 0 0 1px rgba(255,255,255,.015);
@@ -71,7 +87,6 @@
   /* ── THE ONLY SCROLLING REGION ────────────────────────────────── */
   .zone-branches{
     flex:1 1 auto; min-height:0;
-    width:min(100%,1440px); margin:0 auto;
     border:1px solid var(--line-strong);background:var(--line);
     overflow-y:auto; overflow-x:hidden;
     overscroll-behavior:contain;

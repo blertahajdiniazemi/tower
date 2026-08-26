@@ -11,41 +11,33 @@
     --line-strong:rgba(174,198,212,.28); --paper:#e6ecef; --muted:#81909a;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--ink);color:var(--paper);
+  html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper);
     font-family:Inter,-apple-system,Segoe UI,Arial,Helvetica,sans-serif}
-  /* the page itself never scrolls — only the company list does */
-  html,body{overflow:hidden}
+  /* the page itself scrolls — vertically only, never sideways */
+  html,body{overflow-x:hidden}
 
   /* ── SHELL ────────────────────────────────────────────────────────
-     One column, exactly the height of the viewport. The building takes
-     the space it needs at the top and never shrinks away; the branch
-     list takes everything left over and scrolls inside itself.
-     min-height:0 on the scrolling child is what allows it to be shorter
-     than its content — without it a flex item refuses to shrink below
-     its intrinsic height and the whole page would scroll instead. */
+     One column: the building on top, the branch list under it, both the
+     same width. Neither is capped by the height of the window, so at a
+     browser zoom step they both grow by the same factor and the page
+     simply gets taller — the two never scale against each other. */
   .zone-wrap{
     display:flex; flex-direction:column;
-    height:100dvh; max-height:100dvh;
-    padding:18px; gap:12px; overflow:hidden;
+    min-height:100dvh;
+    padding:18px; gap:12px;
   }
 
-  /* Height budget for the render. The scene keeps its 1024×576 ratio, so
-     its width is capped by whichever runs out first — the viewport width
-     or the share of viewport height it is allowed. The whole building
-     stays in view on a short laptop screen, and because only the outer
-     box is resized, every overlay inside keeps its own coordinates. */
-  :root{ --scene-h:56dvh }
-
   /* ── ONE SHARED WIDTH ─────────────────────────────────────────────
-     The render and the branch list are sized by a single rule, so their
-     left and right edges are the same edges. --zone-width is resolved
-     from the same three limits for both: the width available inside the
-     shell, the 1440px cap, and the width the height budget allows at the
-     scene's 1024×576 ratio. Because the value is one expression used in
-     one place, the two boxes cannot drift apart at any viewport size or
-     browser zoom level — a zoom step changes what 100%, 1440px and dvh
-     resolve to, and it changes them identically for both. */
-  :root{ --zone-width: min(100%, 1440px, calc(var(--scene-h) * 1024 / 576)) }
+     The render and the branch list are sized by this single rule, so
+     their left and right edges are the same edges. Both limits are
+     widths — the room inside the shell and a 1440px cap — and neither
+     refers to the height of the window. That is what makes zoom work:
+     a viewport-height cap shrinks by exactly the zoom factor, which
+     would hold the render at a fixed size on screen while the list's
+     text grew around it. With the height out of the expression, a zoom
+     step enlarges both boxes by the same factor, in step, and the page
+     grows taller instead of the building being squeezed. */
+  :root{ --zone-width: min(100%, 1440px) }
 
   .zone-scene,
   .zone-branches{
@@ -84,25 +76,18 @@
     box-shadow:0 0 9px rgba(232,200,154,.85);animation:statusPulse 2s ease-in-out infinite}
   @keyframes statusPulse{50%{opacity:.3}}
 
-  /* ── THE ONLY SCROLLING REGION ────────────────────────────────── */
+  /* ── BRANCH LIST ───────────────────────────────────────────────
+     It shows all of its cards and the page scrolls, rather than the
+     list scrolling inside a box the window height decides — a height
+     budget here would be a second sizing rule, and the two would drift
+     apart again the moment the page was zoomed. */
   .zone-branches{
-    flex:1 1 auto; min-height:0;
+    flex:0 0 auto;
     border:1px solid var(--line-strong);background:var(--line);
-    overflow-y:auto; overflow-x:hidden;
-    overscroll-behavior:contain;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:thin;
-    scrollbar-color:rgba(174,198,212,.28) transparent;
   }
-  .zone-branches::-webkit-scrollbar{width:10px}
-  .zone-branches::-webkit-scrollbar-track{background:transparent}
-  .zone-branches::-webkit-scrollbar-thumb{
-    background:rgba(174,198,212,.22);
-    border:3px solid #081118; border-radius:6px}
-  .zone-branches::-webkit-scrollbar-thumb:hover{background:rgba(174,198,212,.36)}
 
-  /* the header rides the top of the scroller so the cards pass beneath
-     it instead of pushing it out of view */
+  /* the header rides the top of the page so the cards pass beneath
+     it instead of scrolling away */
   .zone-branches__head{display:flex;align-items:center;justify-content:space-between;
     gap:16px;padding:13px 16px;background:linear-gradient(180deg,#071117,#050d12);
     border-bottom:1px solid var(--line-strong);
@@ -131,20 +116,14 @@
   .zone-branch:hover p,
   .zone-branch[aria-pressed="true"] p{color:var(--acc)}
 
-  @media (max-width:1024px){
-    /* a tablet has less height to spare, so the render gives some back */
-    :root{ --scene-h:44dvh }
-  }
+  /* Only the trim changes on small screens. The width itself is left
+     alone on purpose: one rule sizes both boxes at every breakpoint. */
   @media (max-width:760px){
-    :root{ --scene-h:34dvh }
     .zone-wrap{padding:9px; gap:9px}
     .zone-status{right:8px;bottom:8px;padding:6px 8px;font-size:8px}
     .zone-branches__head{align-items:flex-start;flex-direction:column;gap:4px}
     .zone-branches__grid{grid-template-columns:1fr}
   }
-  /* short landscape windows: keep the list usable */
-  @media (max-height:560px){ :root{ --scene-h:40dvh } }
-  @media (max-height:420px){ :root{ --scene-h:34dvh } }
 
   /* ═══════════════════════════════════════════════════════════
      ANIMATION LAYER — added enhancement

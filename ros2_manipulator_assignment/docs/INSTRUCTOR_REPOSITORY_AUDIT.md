@@ -66,10 +66,13 @@ The STL files carry no unit. Their coordinates are consistent with millimetres (
 80.0 units apart, bores 3.2–4.2 units across, part numbers `EBA_01.00.0xx` in the headers).
 The Xacro scales every mesh by `0.01`, so one file unit becomes 1 cm, and all joint origins
 were written for that scale (e.g. `joint_3` z = 0.8 = 80 units × 0.01). The resulting model is
-about 1.69 m tall in RViz. The student's notes contain course diagrams giving the same
-offsets in centimetres (e.g. 3.07 cm between `base_link` and `base_plate` where the URDF uses
-0.307 m; `1.4.docx`, lesson 32, p84–p89). Together this indicates that the software model is
-**ten times** the size of the physical parts. The model was **not** rescaled: a correct
+about 1.69 m tall in RViz. The student's notes reproduce course video frames (Udemy
+watermark) giving the same offsets in centimetres: 3.5 cm for `joint_2` (URDF z 0.35 m), 8 cm
+for `joint_3` (z 0.8 m) and 8.2 cm for `horizontal_arm_to_claw_support` (y 0.82 m)
+(`1.4.docx`, lesson 32, p86–p88, IMG057–IMG059). A further image on p84 (IMG056) states
+3.07 cm for `joint_1` (z 0.307 m), but it carries no course watermark and embeds C2PA metadata
+of an AI image generator, so it is not used as evidence. Together this indicates that the
+software model is **ten times** the size of the physical parts. The model was **not** rescaled: a correct
 rescale would need scale 0.001 *and* every joint and visual origin divided by ten, and no
 measured dimensions of a built robot are available. The report quotes model values as model
 values.

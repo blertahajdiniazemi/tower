@@ -142,7 +142,9 @@ class Report:
         cpf.line_spacing = 1.0
         cpf.space_after = Pt(0)
         cpf.space_before = Pt(0)
-        cpf.left_indent = Cm(0.2)
+        # hanging indent: a long line that wraps continues visibly indented under its start
+        cpf.left_indent = Cm(1.2)
+        cpf.first_line_indent = Cm(-1.0)
         ppr = code.element.get_or_add_pPr()
         shd = _el('w:shd', **{'w:val': 'clear', 'w:color': 'auto', 'w:fill': 'F3F5F7'})
         insert_ordered(ppr, shd, PPR_ORDER)
@@ -422,6 +424,12 @@ class Report:
                 c = r.cells[i]
                 c.width = Cm(widths_cm[i])
                 self._cell(c, val, font_size, bold=(bold_first_col and i == 0))
+        if len(rows) <= 4:
+            # short tables are kept on one page: every row except the last keeps with the next
+            for tr in t.rows[:-1]:
+                for c in tr.cells:
+                    for p in c.paragraphs:
+                        p.paragraph_format.keep_with_next = True
         # grid widths
         grid = t._tbl.tblGrid
         for i, gc in enumerate(grid.findall(qn('w:gridCol'))):
@@ -540,7 +548,10 @@ class Report:
         fp.text = ''
         ppr = fp._p.get_or_add_pPr()
         tabs = _el('w:tabs')
+        # clear the Footer style's default centre/right tabs, then right-align at the text margin
+        tabs.append(_el('w:tab', **{'w:val': 'clear', 'w:pos': 4680}))
         tabs.append(_el('w:tab', **{'w:val': 'right', 'w:pos': 9070}))
+        tabs.append(_el('w:tab', **{'w:val': 'clear', 'w:pos': 9360}))
         insert_ordered(ppr, tabs, PPR_ORDER)
         r = fp.add_run(footer_left + '\t')
         r.font.size = Pt(9)

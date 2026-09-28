@@ -1,0 +1,12 @@
+digraph frames {
+  graph [rankdir=TB, nodesep=0.3, ranksep=0.12, pad=0.1];
+  node [shape=ellipse, height=0.36, margin="0.12,0.02", fontname="Liberation Sans", fontsize=15, style=filled, fillcolor="#dbe7f3", color="#1f3b5a"];
+  edge [fontname="Liberation Sans", fontsize=13, color="#1f3b5a"];
+  "base_link" -> "base_plate" [label=" 10.2 Hz (/tf)", ];
+  "world" -> "base_link" [label=" static (/tf_static)", style=dashed, color="#7a7a7a"];
+  "base_plate" -> "forward_drive_arm" [label=" 10.2 Hz (/tf)", ];
+  "forward_drive_arm" -> "horizontal_arm" [label=" 10.2 Hz (/tf)", ];
+  "claw_support" -> "gripper_right" [label=" 10.2 Hz (/tf)", ];
+  "horizontal_arm" -> "claw_support" [label=" static (/tf_static)", style=dashed, color="#7a7a7a"];
+  "claw_support" -> "gripper_left" [label=" 10.2 Hz (/tf)", ];
+}

@@ -85,7 +85,7 @@ def main():
             t = t @ homog(axis_angle(vec(j.find('axis').get('xyz')), position(j.get('name'))), [0, 0, 0])
         return link_pose(j.find('parent').get('link')) @ t
 
-    fig = plt.figure(figsize=(7.5, 7.5), dpi=200)
+    fig = plt.figure(figsize=(4.4, 5.0), dpi=250)
     ax = fig.add_subplot(111, projection='3d')
     allpts = []
     handles = []
@@ -121,14 +121,14 @@ def main():
     ax.set_zlim(max(0, centre[2] - half), centre[2] + half)
     ax.set_box_aspect((1, 1, 1))
     ax.view_init(elev=22, azim=-35)
-    ax.set_xlabel('x [model m]')
-    ax.set_ylabel('y [model m]')
-    ax.set_zlabel('z [model m]')
-    ax.legend(handles=handles, loc='upper left', fontsize=8, frameon=False)
-    pose = ', '.join('%s=%.2f' % (k, v) for k, v in sorted(q.items())) or 'all joints 0'
-    ax.set_title('Offline render of arduinobot meshes (%s)' % pose, fontsize=9)
-    fig.tight_layout()
-    fig.savefig(out, dpi=200)
+    ax.set_axis_off()
+    ax.legend(handles=handles, loc='upper left', fontsize=10, frameon=False,
+              handletextpad=0.2, borderaxespad=0.0, bbox_to_anchor=(0.0, 1.02))
+    height = pts[:, 2].max() - pts[:, 2].min()
+    ax.text2D(0.98, 0.02, 'height %.2f model m' % height, transform=ax.transAxes, ha='right',
+              fontsize=10, color='#333333')
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    fig.savefig(out, dpi=250, bbox_inches='tight', pad_inches=0.02)
     print('wrote', out, 'extent', pts.min(0).round(3), pts.max(0).round(3))
 
 

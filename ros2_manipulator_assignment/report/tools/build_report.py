@@ -36,7 +36,18 @@ class Citer:
             if k not in self.order:
                 self.order.append(k)
             nums.append(self.order.index(k) + 1)
-        return ', '.join('[%d]' % n for n in nums)
+        # IEEE style: ascending, runs of three or more consecutive numbers as [a]–[b]
+        nums = sorted(set(nums))
+        groups, start = [], 0
+        for i in range(1, len(nums) + 1):
+            if i == len(nums) or nums[i] != nums[i - 1] + 1:
+                run = nums[start:i]
+                if len(run) >= 3:
+                    groups.append('[%d]\u2013[%d]' % (run[0], run[-1]))
+                else:
+                    groups.extend('[%d]' % n for n in run)
+                start = i
+        return ', '.join(groups)
 
 
 def build(known_refs=None, toc_pages=None):

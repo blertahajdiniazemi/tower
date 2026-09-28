@@ -254,7 +254,7 @@ def pubsub(r, c):
         'communicate %s. {ref:fig-pubsub} shows the two cross-language combinations that were exercised.'
         % (c('d_topics'), c('d_utopics')))
     r.figure(os.path.join(FIG, 'fig02_pubsub.png'), 'fig-pubsub',
-             'Publisher → topic → subscriber in both cross-language directions.', width_cm=16,
+             'Publisher → topic → subscriber in both cross-language directions.', width_cm=14,
              attribution='New diagram (category C); names taken from the delivered code. It shows the '
                          'configuration, not a measured trace.')
     r.body(
@@ -295,19 +295,19 @@ def pubsub(r, c):
         'publisher rate" %s; the measured values below are therefore observations, while the 1 s timer '
         'period is the configured value.' % (c('d_utopics'), c('d_utopics')))
     r.table(
-        ['Scenario (test container)', 'Publisher', 'Subscriber', 'Result'],
+        ['Direction', 'Publisher → subscriber (package / executable)', 'Result in the test container'],
         [
-            ['(a) Python → C++', 'arduinobot_py_examples simple_publisher',
-             'arduinobot_cpp_examples simple_subscriber',
+            ['(a) Python → C++', 'arduinobot_py_examples / simple_publisher → '
+             'arduinobot_cpp_examples / simple_subscriber',
              '33 consecutive messages received (counter 0–32, "I heard: Hello ROS 2 - counter: 0" …); '
              'average rate 1.000 Hz; no traceback on Ctrl+C'],
-            ['(b) C++ → Python', 'arduinobot_cpp_examples simple_publisher',
-             'arduinobot_py_examples simple_subscriber',
+            ['(b) C++ → Python', 'arduinobot_cpp_examples / simple_publisher → '
+             'arduinobot_py_examples / simple_subscriber',
              '33 consecutive messages received (counter 0–32, "I heard: Hello ROS 2 - counter:0" …); '
              'average rate 1.000 Hz; no traceback on Ctrl+C'],
         ],
         'tab-pubsub', 'Publisher–subscriber runs in the preparation environment (log '
-        '`verification/logs/run_2026-09-28/20_pubsub.log`).', [3.2, 3.9, 3.9, 5.0])
+        '`verification/logs/run_2026-09-28/20_pubsub.log`).', [2.7, 5.6, 7.7], font_size=9)
     r.body(
         'The student\'s notes contain historical evidence of the same two directions on the student\'s '
         'virtual machine, dated 25 June 2026 by the VM clock: a C++ publisher feeding the Python '
@@ -357,13 +357,13 @@ def workspaces(r, c):
             ['arduinobot_py_examples', 'ament_python', 'exec: rclpy, std_msgs, rcl_interfaces; test: '
              'ament_copyright, ament_flake8, ament_pep257, python3-pytest', '3 console scripts'],
             ['arduinobot_cpp_examples', 'ament_cmake', 'depend: rclcpp, std_msgs, rcl_interfaces',
-             '3 executables in `lib/arduinobot_cpp_examples`'],
+             '3 executables (`lib/`)'],
             ['arduinobot_description', 'ament_cmake', 'exec: ament_index_python, launch, launch_ros, '
              'robot_state_publisher, urdf, joint_state_publisher, joint_state_publisher_gui, rviz2, xacro, '
              'ros2launch; ros_gz_sim, ros_gz_bridge (optional Gazebo launch only)',
              '`launch/`, `meshes/`, `urdf/`, `rviz/`'],
         ],
-        'tab-pkgs', 'Packages of the delivered workspace.', [3.6, 2.3, 7.1, 3.0], font_size=9)
+        'tab-pkgs', 'Packages of the delivered workspace.', [3.8, 2.4, 6.9, 2.9], font_size=9)
     r.body(
         'Direct dependencies should be declared even when they arrive transitively; the launch files\' '
         'imports `ament_index_python`, `launch` and `launch_ros` were therefore added to the manifest '
@@ -405,7 +405,7 @@ def urdf(r, c):
              '0 … π/2; = −1 × joint_4'],
         ],
         'tab-joints', 'Joints of the model (all revolute joints: effort 30, velocity 10 as supplied '
-        'Xacro properties).', [3.6, 2.1, 4.6, 2.4, 1.0, 2.3], font_size=8.5)
+        'Xacro properties).', [4.3, 1.9, 4.3, 2.3, 0.9, 2.3], font_size=8.5)
     r.body(
         'Two kinds of origin must be distinguished. A joint `<origin>` places the child link\'s frame '
         'relative to the parent link\'s frame %s; it defines the kinematics. The `<origin>` inside a '
@@ -443,9 +443,9 @@ def urdf(r, c):
         'The mesh files carry no unit. Their coordinates are consistent with millimetres (for example, '
         'pivot bores 80.0 units apart), but the model scales them by 0.01, so one unit becomes one '
         'centimetre and the rendered arm is about 1.69 m tall ({ref:fig-render}). All joint origins were '
-        'written for that scale: `joint_3` at 0.8 m equals the 80-unit bore spacing. Course diagrams '
-        'reproduced in the notes give the corresponding real offsets in centimetres, e.g. 3.07 cm where '
-        'the URDF uses 0.307 m (1.4, lesson 32, p84–p89) %s. The software model is therefore about ten '
+        'written for that scale: `joint_3` at 0.8 m equals the 80-unit bore spacing. Course video frames '
+        'reproduced in the notes give the corresponding real offsets in centimetres – 3.5 cm, 8 cm and '
+        '8.2 cm where the URDF uses 0.35 m, 0.8 m and 0.82 m (1.4, lesson 32, p86–p88) %s. The software model is therefore about ten '
         'times the physical size. It was deliberately not rescaled, because a correct rescale would '
         'require changing every origin and no measured dimensions of a built robot are available; model '
         'values in this report are quoted as model values.' % c('n14', 'repo'))
@@ -492,7 +492,7 @@ def tf(r, c):
         'confirms that the published TF tree matches the model: yaw equals `joint_1` and roll equals '
         '`joint_2 + joint_3`, because both pitch joints rotate about x.' % (c('d_tf2intro', 'prep'), c('prep')))
     r.figure(os.path.join(FIG, 'fig07_tf_frames.png'), 'fig-frames',
-             'TF tree recorded by `view_frames` during the verification.', width_cm=7.2,
+             'TF tree recorded by `view_frames` during the verification.', width_cm=7.0,
              attribution='Genuine output of `ros2 run tf2_tools view_frames` (category C, '
                          '`verification/logs/run_2026-09-28`), converted from PDF.')
 
@@ -509,7 +509,7 @@ def rviz(r, c):
     r.figure(os.path.join(FIG, 'fig09_rviz_display_launch.png'), 'fig-rviz',
              '`ros2 launch arduinobot_description display.launch.py` in the preparation environment: '
              'RViz with RobotModel and TF displays, and the joint_state_publisher_gui window with four '
-             'sliders.', width_cm=15,
+             'sliders.', width_cm=13.5,
              attribution='Genuine screenshot of the delivered workspace (category C), Ubuntu 22.04 / Humble '
                          'container, virtual X server with software OpenGL; 28 Sep. 2026.')
     r.body(
@@ -601,8 +601,8 @@ def parameters(r, c):
         'The Python parameter laboratory is only partly documented. The notes show the creation of an '
         'empty `simple_parameter.py` in the student\'s workspace and a full listing of the node with the '
         'instructor\'s names and defaults (1.5, lesson 36, p7–p10) %s. The listing is unindented as '
-        'stored in the document and logs the string parameter with `%%d`, which would raise a `TypeError` '
-        'when that parameter is set; the delivered code uses `%%s`, as the instructor\'s file does. No '
+        'stored in the document and logs the string parameter with `%%d`, which – once re-indented – '
+        'would raise a `TypeError` when that parameter is set; the delivered code uses `%%s`, as the instructor\'s file does. No '
         'entry-point registration, rebuild, run or `ros2 param` output is documented, and no C++ parameter '
         'lesson appears in the notes. The runnable parameter demonstration and its results therefore '
         'belong to category C, and completing the laboratory on the student\'s machine is future work.'
@@ -626,7 +626,7 @@ def case_study(r, c):
         '**Baseline.** Section 4 on `main` (commit 4936385) is the smallest snapshot with all three '
         'packages, and its model does not depend on the control package, unlike Sections 5–9 %s. Branch '
         '`gz-classic` targets Gazebo Classic, whereas the notes record the installation of the '
-        'modern-Gazebo packages `ros-humble-ros-gz*` (1.2, lesson 14) %s.' % (c('repo', 'prep'), c('n12')),
+        'modern-Gazebo packages `ros-humble-ros-gz*` (1.2, lesson 14) %s.' % (c('repo', 'prep'), c('repo_gzc', 'n12')),
         '**Minimal corrections.** Twelve changes (C1–C12) were made; the robot model, meshes, topic, message '
         'type, node names and defaults are unchanged. {ref:tab-changes} summarises them; the full diff is '
         'delivered in `patches/`.',
@@ -778,7 +778,7 @@ def status(r, c):
              'instructor\'s display launch on the student\'s machine; Gazebo simulation; ros2_control; '
              'MoveIt 2; the application and Alexa integration; building and wiring the physical robot.'],
         ],
-        'tab-status', 'Project status by category.', [4.2, 11.8], font_size=9.5)
+        'tab-status', 'Project status by category.', [3.6, 12.4], font_size=9)
     r.heading('Checks outstanding on the target machine', 2)
     r.body(
         'The preparation verified the project in a container that uses the target distribution but not the '
@@ -813,14 +813,12 @@ def conclusion(r, c):
         'over `/chatter`, a parameter node whose update rules had to be corrected, a workspace with three '
         'packages, and a URDF model that generic Humble nodes turn into coordinate frames and a 3D view.')
     r.body(
-        'The student\'s notes document installation, workspace and package creation, publishers and '
-        'subscribers in both languages including both cross-language directions, and a complete robot '
-        'model visualised in RViz; the parameter laboratory and all later course stages are not documented '
-        'as completed. The prepared workspace preserves the instructor\'s robot model, adds twelve '
-        'documented corrections, and was built and exercised in an Ubuntu 22.04 / ROS 2 Humble container. '
-        'Its behaviour on the student\'s own machine, simulation, control, motion planning and hardware '
-        'remain to be verified, and the model is a ten-times-scaled kinematic description with placeholder '
-        'dynamics. Within these limits, the project shows that ROS 2\'s value lies less in any single '
+        'The notes document the work up to a complete robot model visualised in RViz; the parameter '
+        'laboratory and later course stages are not documented as completed. The prepared workspace keeps '
+        'the instructor\'s robot model, adds twelve documented corrections and was built and exercised in '
+        'an Ubuntu 22.04 / ROS 2 Humble container; the student\'s own machine, simulation, control, motion '
+        'planning and hardware remain to be verified, and the model is a ten-times-scaled kinematic '
+        'description with placeholder dynamics. Within these limits, the project shows that ROS 2\'s value lies less in any single '
         'feature than in the combination of standard interfaces, reusable components and inspection tools '
         'that allowed every step to be checked.')
 
@@ -832,9 +830,9 @@ def references(r, cite_order, refs):
            'inspected 28 Sep. 2026) because docs.ros.org was not reachable from the preparation '
            'environment; the URLs are those at which the same pages are published. References [1]–[5] '
            'are evidence of the student\'s course progress; the others support the technical content.',
-           size=10, align='justify')
+           size=9, align='justify')
     for n, key in enumerate(cite_order, 1):
-        p = r.para('[%d]\t%s' % (n, refs[key]), size=9, space_after=1)
+        p = r.para('[%d]\t%s' % (n, refs[key]), size=9, space_after=0)
         pf = p.paragraph_format
         from docx.shared import Cm
         pf.left_indent = Cm(1.0)

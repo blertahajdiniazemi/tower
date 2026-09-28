@@ -1,23 +1,23 @@
 // Figure: publisher -> topic -> subscriber, both cross-language combinations
 // Names are those of the delivered code (arduinobot_ws/src). Conceptual diagram, not a trace.
 digraph pubsub {
-  graph [rankdir=LR, fontname="Liberation Sans", fontsize=13, nodesep=0.35, ranksep=0.55, pad=0.2, newrank=true];
-  node  [fontname="Liberation Sans", fontsize=12, style="rounded,filled", shape=box, color="#1f3b5a", penwidth=1.3];
-  edge  [fontname="Liberation Sans", fontsize=10.5, color="#1f3b5a", penwidth=1.4];
+  graph [rankdir=TB, fontname="Liberation Sans", fontsize=16, nodesep=0.5, ranksep=0.32, pad=0.1, newrank=true];
+  node  [fontname="Liberation Sans", fontsize=15, style="rounded,filled", shape=box, color="#1f3b5a", penwidth=1.3, width=3.3];
+  edge  [fontname="Liberation Sans", fontsize=13, color="#1f3b5a", penwidth=1.4];
 
-  subgraph cluster_b {
-    label=<<b>(b) C++ publisher → Python subscriber</b>>; labeljust=l; color="#9aa9b8"; style="rounded,dashed";
-    pb [fillcolor="#e3efe0", label=<<b>/simple_publisher</b><br/><font point-size="10">arduinobot_cpp_examples · C++ (rclcpp)<br/>wall timer 1 s → publish()</font>>];
-    tb [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/chatter</b><br/><font point-size="10">type std_msgs/msg/String<br/>QoS depth 10 (reliable, volatile)</font>>];
-    sb [fillcolor="#dbe7f3", label=<<b>/simple_subscriber</b><br/><font point-size="10">arduinobot_py_examples · Python (rclpy)<br/>msgCallback() → "I heard: …"</font>>];
-    pb -> tb [label="publish"]; tb -> sb [label="deliver"];
-  }
   subgraph cluster_a {
-    label=<<b>(a) Python publisher → C++ subscriber</b>>; labeljust=l; color="#9aa9b8"; style="rounded,dashed";
-    pa [fillcolor="#dbe7f3", label=<<b>/simple_publisher</b><br/><font point-size="10">arduinobot_py_examples · Python (rclpy)<br/>timer period 1.0 s → publish()</font>>];
-    ta [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/chatter</b><br/><font point-size="10">type std_msgs/msg/String<br/>QoS depth 10 (reliable, volatile)</font>>];
-    sa [fillcolor="#e3efe0", label=<<b>/simple_subscriber</b><br/><font point-size="10">arduinobot_cpp_examples · C++ (rclcpp)<br/>msgCallback() → "I heard: …"</font>>];
-    pa -> ta [label="publish"]; ta -> sa [label="deliver"];
+    label=<<b>(a) Python → C++</b>>; labeljust=l; color="#9aa9b8"; style="rounded,dashed";
+    pa [fillcolor="#dbe7f3", label=<<b>/simple_publisher</b><br/><font point-size="13">arduinobot_py_examples (rclpy)<br/>timer period 1.0 s</font>>];
+    ta [style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/chatter</b><br/><font point-size="13">std_msgs/msg/String<br/>depth 10, reliable, volatile</font>>];
+    sa [fillcolor="#e3efe0", label=<<b>/simple_subscriber</b><br/><font point-size="13">arduinobot_cpp_examples (rclcpp)<br/>msgCallback → "I heard: …"</font>>];
+    pa -> ta [label=" publish"]; ta -> sa [label=" deliver"];
+  }
+  subgraph cluster_b {
+    label=<<b>(b) C++ → Python</b>>; labeljust=l; color="#9aa9b8"; style="rounded,dashed";
+    pb [fillcolor="#e3efe0", label=<<b>/simple_publisher</b><br/><font point-size="13">arduinobot_cpp_examples (rclcpp)<br/>wall timer 1 s</font>>];
+    tb [style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/chatter</b><br/><font point-size="13">std_msgs/msg/String<br/>depth 10, reliable, volatile</font>>];
+    sb [fillcolor="#dbe7f3", label=<<b>/simple_subscriber</b><br/><font point-size="13">arduinobot_py_examples (rclpy)<br/>msgCallback → "I heard: …"</font>>];
+    pb -> tb [label=" publish"]; tb -> sb [label=" deliver"];
   }
   {rank=same; pa; pb}
 }

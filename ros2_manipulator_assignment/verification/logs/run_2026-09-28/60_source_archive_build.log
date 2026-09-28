@@ -1,13 +1,32 @@
-$ tar -xzf arduinobot_ws_source_2026-09-28.tar.gz; cd arduinobot_ws; colcon build --symlink-install
-Finished <<< arduinobot_description [1.62s]
-Finished <<< arduinobot_py_examples [1.70s]
-Finished <<< arduinobot_cpp_examples [19.4s]
-
-Summary: 3 packages finished [19.7s]
-$ ros2 pkg executables
-arduinobot_cpp_examples simple_parameter
-arduinobot_cpp_examples simple_publisher
-arduinobot_cpp_examples simple_subscriber
+$ sha256sum -c arduinobot_ws_source_2026-09-28.tar.gz.sha256
+arduinobot_ws_source_2026-09-28.tar.gz: OK
+$ tar -xzf arduinobot_ws_source_2026-09-28.tar.gz; cd arduinobot_ws_source_2026-09-28/arduinobot_ws; colcon build --symlink-install
+Finished <<< arduinobot_description [1.09s]
+Finished <<< arduinobot_py_examples [1.22s]
+Finished <<< arduinobot_cpp_examples [9.99s]
+Summary: 3 packages finished [10.2s]
+$ ros2 pkg executables arduinobot_py_examples; ros2 pkg executables arduinobot_cpp_examples
 arduinobot_py_examples simple_parameter
 arduinobot_py_examples simple_publisher
 arduinobot_py_examples simple_subscriber
+arduinobot_cpp_examples simple_parameter
+arduinobot_cpp_examples simple_publisher
+arduinobot_cpp_examples simple_subscriber
+$ ls install/arduinobot_description/share/arduinobot_description
+cmake
+environment
+hook
+launch
+local_setup.bash
+local_setup.dsv
+local_setup.sh
+local_setup.zsh
+meshes
+package.bash
+package.dsv
+package.ps1
+package.sh
+package.xml
+package.zsh
+rviz
+urdf

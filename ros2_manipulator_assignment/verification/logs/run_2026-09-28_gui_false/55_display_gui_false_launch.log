@@ -1,0 +1,39 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-28-05-14-58-027813-30d2d41650da-45
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [joint_state_publisher-1]: process started with pid [48]
+[INFO] [robot_state_publisher-2]: process started with pid [50]
+[INFO] [rviz2-3]: process started with pid [52]
+[robot_state_publisher-2] [INFO] [1790572498.177048518] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1790572498.177174327] [robot_state_publisher]: got segment base_plate
+[robot_state_publisher-2] [INFO] [1790572498.177179972] [robot_state_publisher]: got segment claw_support
+[robot_state_publisher-2] [INFO] [1790572498.177183415] [robot_state_publisher]: got segment forward_drive_arm
+[robot_state_publisher-2] [INFO] [1790572498.177186294] [robot_state_publisher]: got segment gripper_left
+[robot_state_publisher-2] [INFO] [1790572498.177189249] [robot_state_publisher]: got segment gripper_right
+[robot_state_publisher-2] [INFO] [1790572498.177191838] [robot_state_publisher]: got segment horizontal_arm
+[robot_state_publisher-2] [INFO] [1790572498.177194689] [robot_state_publisher]: got segment world
+[rviz2-3] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+[rviz2-3] [INFO] [1790572498.340754369] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1790572498.341649412] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[rviz2-3] [INFO] [1790572498.393834808] [rviz2]: Stereo is NOT SUPPORTED
+[joint_state_publisher-1] [INFO] [1790572498.452741299] [joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...
+[rviz2-3] [INFO] [1790572534.776525414] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1790572534.778275641] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joint_state_publisher-1] Traceback (most recent call last):
+[joint_state_publisher-1]   File "/opt/underlay/install/lib/joint_state_publisher/joint_state_publisher", line 33, in <module>
+[joint_state_publisher-1]     sys.exit(load_entry_point('joint-state-publisher==2.4.0', 'console_scripts', 'joint_state_publisher')())
+[joint_state_publisher-1]   File "/opt/underlay/install/lib/python3.10/site-packages/joint_state_publisher/joint_state_publisher.py", line 466, in main
+[joint_state_publisher-1]     rclpy.spin(jsp)
+[joint_state_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[joint_state_publisher-1]     executor.spin_once()
+[joint_state_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+[joint_state_publisher-1]     self._spin_once_impl(timeout_sec)
+[joint_state_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+[joint_state_publisher-1]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[joint_state_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+[joint_state_publisher-1]     return next(self._cb_iter)
+[joint_state_publisher-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+[joint_state_publisher-1]     raise ExternalShutdownException()
+[joint_state_publisher-1] rclpy.executors.ExternalShutdownException
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 50]
+[ERROR] [joint_state_publisher-1]: process has died [pid 48, exit code 1, cmd '/opt/underlay/install/lib/joint_state_publisher/joint_state_publisher --ros-args'].
+[INFO] [rviz2-3]: process has finished cleanly [pid 52]

@@ -11,7 +11,7 @@ SCRATCH=${SCRATCH:-/tmp/arduinobot_verify}
 IMAGE=${IMAGE:-arduinobot-humble-test}
 rm -rf "$SCRATCH/ws" "$OUT"; mkdir -p "$SCRATCH/ws" "$OUT"
 cp -r "$A/arduinobot_ws/src" "$SCRATCH/ws/"   # build outside the delivered source tree
-for stage in 00_environment 10_build 20_pubsub 30_parameters 40_model_tf 50_rviz; do
+for stage in 00_environment 10_build 20_pubsub 30_parameters 40_model_tf 50_rviz 55_display_gui_false; do
   echo "######## $stage"
   docker run --rm --network none -v "$SCRATCH/ws:/ws" -v "$HERE/scripts:/scripts:ro" -v "$OUT:/out" \
     "$IMAGE" bash "/scripts/$stage.sh" > "$OUT/$stage.log" 2>&1 || echo "stage $stage exited with $?"

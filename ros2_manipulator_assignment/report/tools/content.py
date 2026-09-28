@@ -60,7 +60,7 @@ def abstract(r):
         'invalid updates, URDF processing, joint states, TF and an RViz display rendered on a virtual '
         'screen. The notes document the installation, workspace creation, publishers and subscribers in '
         'both languages and a complete URDF model visualised in RViz; the parameter laboratory is '
-        'documented only as a code listing.')
+        'documented only by the creation of the file and a code listing.')
     r.body(
         'The main limitations are that verification ran in a container rather than on the student\'s own '
         'machine, that RViz used software rendering, that simulation, ros2_control, MoveIt 2 and the '
@@ -119,8 +119,9 @@ def what_is_ros2(r, c):
     r.body(
         'ROS 2 is released in *distributions*, versioned sets of packages kept stable after release %s. '
         'Humble Hawksbill, the eighth ROS 2 release, was published on 23 May 2022 and reaches end of life '
-        'in May 2027 %s. The notes record these ideas as conceptual study, including that ROS is a '
-        'framework on top of an operating system (1.2 Course Notes, lessons 16, 17 and 20) %s.'
+        'in May 2027 %s. The notes record, as conceptual study, that ROS is a common software '
+        'framework running on top of an operating system (1.2 Course Notes, lessons 16, 17 and 20) %s; '
+        'distributions and release dates are taken from the documentation only.'
         % (c('d_distros'), c('d_humble', 'd_distros'), c('n12')))
 
 
@@ -138,11 +139,12 @@ def why_ros2(r, c):
     r.body(
         'ROS 2 was also designed to address limitations of ROS 1 that the notes list for lesson 18: '
         'changing network conditions, multi-robot systems, embedded platforms, security and real-time '
-        'behaviour %s. {ref:tab-ros1} relates these motivations to what the Humble documentation actually '
-        'provides and qualifies each point, because several of them are capabilities that must be '
+        'behaviour %s. {ref:tab-ros1} relates four of them (embedded platforms are outside this project), '
+        'together with the multi-language design described in lesson 19, to what the Humble '
+        'documentation actually provides and qualifies each point, because several of them are capabilities that must be '
         'configured rather than guarantees.' % c('n12'))
     r.table(
-        ['Motivation (notes, lesson 18)', 'What ROS 2 provides (documentation)', 'Qualification'],
+        ['Motivation (notes)', 'What ROS 2 provides (documentation)', 'Qualification'],
         [
             ['Unreliable or changing networks', 'DDS/RTPS middleware with configurable Quality of Service '
              '(history, reliability, durability) %s' % c('d_vendors', 'd_qos'),
@@ -156,7 +158,7 @@ def why_ros2(r, c):
             ['Real-time behaviour', 'Designed "with real-time performance constraints in mind" %s'
              % c('d_realtime'), 'Requires a real-time kernel and deterministic code; the standard '
              'executors are not suited to hard real-time use %s.' % c('d_executors')],
-            ['Several programming languages', 'Client libraries rclcpp and rclpy share one C core, rcl %s'
+            ['Several programming languages (lesson 19)', 'Client libraries rclcpp and rclpy share one C core, rcl %s'
              % c('d_clientlib'), 'Demonstrated in this project for C++ and Python.'],
         ],
         'tab-ros1', 'Motivations for ROS 2 recorded in the notes and what the Humble documentation '
@@ -272,8 +274,9 @@ def pubsub(r, c):
         'stored the value 1.0 in a variable called `frequency_` and passed it directly as the period. At '
         '1.0 the result is the same, but any other "frequency" would have produced the inverse rate. The '
         'delivered code keeps `frequency_` as a rate in hertz and passes `1.0 / self.frequency_` '
-        '({ref:lst-pub}); this correction is category C. The same code appears unchanged in the student\'s '
-        'notes (1.3 Course Notes, lesson 26, p28–p29) %s.' % (c('d_pypubsub'), c('n13')))
+        '({ref:lst-pub}); this correction is category C. The instructor\'s original, which passes `frequency_` '
+        'directly as the period, appears unchanged in the student\'s notes (1.3 Course Notes, lesson 26, '
+        'p28–p29) %s.' % (c('d_pypubsub'), c('n13')))
     r.code(excerpt('arduinobot_py_examples/arduinobot_py_examples/simple_publisher.py',
                    'class SimplePublisher', 'self.counter_ += 1'),
            'lst-pub', 'Python publisher: publisher creation, timer and timer callback '
@@ -310,7 +313,8 @@ def pubsub(r, c):
         '`verification/logs/run_2026-09-28/20_pubsub.log`).', [2.7, 5.6, 7.7], font_size=9)
     r.body(
         'The student\'s notes contain historical evidence of the same two directions on the student\'s '
-        'virtual machine, dated 25 June 2026 by the VM clock: a C++ publisher feeding the Python '
+        'virtual machine, dated 25 June 2026 (UTC, from the ROS log time stamps of the VM clock): a C++ '
+        'publisher feeding the Python '
         'subscriber (1.4, lesson 28, p22, screenshot IMG020) and the Python publisher feeding the C++ '
         'subscriber (1.4, lesson 29, p41–p42, IMG031–IMG032). The notes also show `ros2 topic echo`, '
         '`ros2 topic info --verbose` and `ros2 topic hz` measuring 1.000 Hz for both publishers '
@@ -385,11 +389,11 @@ def urdf(r, c):
     r.figure_pair(
         (os.path.join(FIG, 'fig05_urdf_tree.png'), 'fig-urdf',
          'Link–joint tree of `arduinobot.urdf.xacro`. Dashed edges: fixed joints; `joint_5` mimics '
-         '`joint_4` (×−1).', 7.4,
+         '`joint_4` (×−1).', 7.0,
          'Generated from the verified model (category C); replaces the instructor\'s 2021 '
          '`arduinobot.pdf`, which still shows a removed `tool_link`.'),
         (os.path.join(FIG, 'fig08_offline_render.png'), 'fig-render',
-         'Offline render of the instructor\'s meshes placed with the URDF kinematics (all joints 0).', 7.6,
+         'Offline render of the instructor\'s meshes placed with the URDF kinematics (all joints 0).', 7.0,
          'Rendered with matplotlib from the expanded URDF (category C); not an RViz test. Axes in model '
          'metres.'))
     r.table(
@@ -461,8 +465,9 @@ def urdf(r, c):
         'joint_state_publisher_gui shows four sliders, and in the verification `joint_4 = −0.6` produced '
         '`joint_5 = 0.6` in `/joint_states` %s. The physical robot of the course uses a parallelogram '
         'linkage to keep the gripper orientation (notes, lesson 5) %s; the URDF does not model that '
-        'linkage and treats the arm as a serial chain, and six supplied meshes of linkage parts are '
-        'unused.' % (c('n11'), c('prep'), c('n11')))
+        'linkage and treats the arm as a serial chain; six of the 13 supplied meshes (`link`, `plate`, '
+        '`round_plate`, `servo_plate`, `triangular_link`, `vertical_drive_arm`) are not referenced by '
+        'the model.' % (c('n11'), c('prep'), c('n11')))
 
 
 def tf(r, c):
@@ -473,7 +478,7 @@ def tf(r, c):
         'transforms: those of fixed joints once on `/tf_static` with transient-local durability %s, and '
         'those of movable joints on `/tf` whenever new joint positions arrive on `/joint_states` %s. '
         'Joint positions come from joint_state_publisher or its GUI, which parse the model, publish '
-        'values for all non-fixed joints and let robot_state_publisher "calculate all of the transforms" '
+        'values for all non-fixed joints and let robot_state_publisher "calculate all of transforms between the different parts" '
         '%s. {ref:fig-arch2} shows these relationships for the delivered launch file.'
         % (c('d_tf2'), c('d_humble'), c('d_rsp'), c('d_urdf_move')))
     r.figure(os.path.join(FIG, 'fig04_software_architecture.png'), 'fig-arch2',
@@ -509,7 +514,7 @@ def rviz(r, c):
     r.figure(os.path.join(FIG, 'fig09_rviz_display_launch.png'), 'fig-rviz',
              '`ros2 launch arduinobot_description display.launch.py` in the preparation environment: '
              'RViz with RobotModel and TF displays, and the joint_state_publisher_gui window with four '
-             'sliders.', width_cm=13.5,
+             'sliders.', width_cm=12.5,
              attribution='Genuine screenshot of the delivered workspace (category C), Ubuntu 22.04 / Humble '
                          'container, virtual X server with software OpenGL; 28 Sep. 2026.')
     r.body(
@@ -619,7 +624,8 @@ def case_study(r, c):
         'arduinobot_description package; the two example packages teach the communication and '
         'configuration mechanisms that later course sections use to control it. Responsibilities are '
         'deliberately separated: the description package contains no program code, only the model, '
-        'its meshes, a launch file and an RViz configuration, while all running programs in the '
+        'its meshes, two launch files (display and the optional Gazebo launch), an RViz configuration '
+        'and the instructor\'s `arduinobot.pdf` diagram, while all running programs in the '
         'visualisation are generic Humble nodes.' % c('n11'))
     r.heading('Implementation choices', 2)
     r.bullets([
@@ -635,8 +641,8 @@ def case_study(r, c):
         'conflicting `/joint_states` publishers cannot be started together.',
         '**No combined launch file.** Messaging and visualisation are independent; combining them would '
         'couple the example and description packages without demonstrating anything new.',
-        '**Simulation kept optional.** `gazebo.launch.py` was kept as instructor material with formatting '
-        'fixes only. It was not executed, and on Humble its use of `GZ_SIM_RESOURCE_PATH` must be '
+        '**Simulation kept optional.** `gazebo.launch.py` was kept as instructor material with lint-only '
+        'fixes (bracket formatting, an unused variable removed). It was not executed, and on Humble its use of `GZ_SIM_RESOURCE_PATH` must be '
         'checked against the installed Gazebo Fortress version %s.' % c('prep'),
     ])
     r.table(
@@ -687,10 +693,12 @@ def workflow(r, c):
     r.body(
         'The work followed the cycle in {ref:fig-flow}: inspect the sources, prepare the packages, '
         'resolve dependencies, build, source, run, inspect and document, returning to preparation when '
-        'a check revealed a defect. Every check was scripted (`verification/scripts/`), so that it can '
-        'be repeated on the target machine and its output kept as evidence.')
+        'a check revealed a defect. The build, messaging, parameter, model/TF and RViz checks were '
+        'scripted (`verification/scripts/`) so that they can be repeated on the target machine and '
+        'their output kept as evidence; the few checks run by hand are recorded with their commands in '
+        '`docs/VERIFICATION.md`.')
     r.figure(os.path.join(FIG, 'fig06_workflow.png'), 'fig-flow',
-             'Development and verification workflow.', width_cm=13.5,
+             'Development and verification workflow.', width_cm=12.5,
              attribution='New diagram (category C).')
     r.body(
         'The preparation environment was a cloud container running Ubuntu 24.04, not the target system. '
@@ -711,7 +719,7 @@ def workflow(r, c):
             ['Parameters (Python and C++)', '`ros2 param`, atomic service call', 'passed (runtime)'],
             ['Model tree, joints, mimic, 14 mesh URIs', '`check_model.py`, `check_urdf`', 'passed (static)'],
             ['Joint states, TF, static TF', '`ros2 topic echo/hz`, `tf2_echo`, `view_frames`', 'passed (runtime)'],
-            ['RViz display, late join, clean shutdown', '`display.launch.py` under Xvfb, screenshots', 'passed (runtime, software rendering)'],
+            ['RViz display (`gui` true and false), late join, clean shutdown', '`display.launch.py` under Xvfb, screenshots', 'passed (runtime, software rendering)'],
             ['Gazebo launch, ros2_control, MoveIt, hardware', '–', 'not tested'],
         ],
         'tab-verif', 'Verification summary (details and logs in `docs/VERIFICATION.md`).',
@@ -737,9 +745,10 @@ def advantages(r, c):
         '**Introspection.** The running graph, topic types, QoS, parameters and transforms could be '
         'inspected with standard tools, which made every verification step observable.',
         '**Configuration without recompilation.** Parameters changed node behaviour at start-up and at run '
-        'time, and launch arguments selected the joint-state source.',
-        '**Reproducible builds.** Declared dependencies, colcon and rosdep allowed the same workspace to be '
-        'built from source in a clean container %s.' % c('d_rosdep'),
+        'time, and the `gui` launch argument selected the joint-state source (both values were launched).',
+        '**Reproducible builds.** Declared dependencies and colcon allowed the workspace to be built from '
+        'source in a fresh container, and `rosdep check` found every declared dependency except the '
+        'optional Gazebo keys %s.' % c('d_rosdep'),
     ])
     r.body(
         'The same project also shows practical limitations. The environment must be sourced correctly in '
@@ -760,12 +769,11 @@ def status(r, c):
         ['Category', 'Status'],
         [
             ['A – Documented student work',
-             'ROS 2 Humble and tools installed; development environment configured; workspace and both '
-             'example packages created; Python and C++ publishers and subscribers built and run; topic '
-             'inspection; both cross-language directions; description package and complete URDF/Xacro '
-             'model visualised in RViz with urdf_tutorial; conceptual study of ROS 2 architecture, '
-             'communication, packages, RViz and parameters; Python parameter lab started (code listing '
-             'only). Sources: notes 1.1–1.5 %s.' % c('n11', 'n12', 'n13', 'n14', 'n15')],
+             'Installation and environment set-up; workspace and example packages; Python and C++ '
+             'publishers and subscribers built and run in both cross-language directions; description '
+             'package and complete URDF/Xacro model visualised in RViz with urdf_tutorial; conceptual study; '
+             'Python parameter lab started (file creation and code listing only) %s.'
+             % c('n11', 'n12', 'n13', 'n14', 'n15')],
             ['B – Instructor material',
              'Section 4 packages (examples, parameter nodes, model, meshes, launch and RViz files), later '
              'sections with ros2_control, MoveIt 2, application, Alexa and firmware %s.' % c('repo')],
@@ -832,7 +840,7 @@ def references(r, cite_order, refs):
            'are evidence of the student\'s course progress; the others support the technical content.',
            size=9, align='justify')
     for n, key in enumerate(cite_order, 1):
-        p = r.para('[%d]\t%s' % (n, refs[key]), size=9, space_after=0)
+        p = r.para('[%d]\t%s' % (n, refs[key]), size=8.5, space_after=0)
         pf = p.paragraph_format
         from docx.shared import Cm
         pf.left_indent = Cm(1.0)

@@ -4,8 +4,12 @@ All checks below were run on **28 Sep 2026** against the delivered sources in
 `arduinobot_ws/src`, copied to a scratch workspace so that no `build/`, `install/` or `log/`
 directory is created in the delivery. Logs and screenshots are in
 `verification/logs/run_2026-09-28/`; probes of the *unmodified* instructor snapshot are in
-`verification/logs/baseline_instructor/`. Every stage script is in `verification/scripts/`
-and can be re-run with `verification/run_in_docker.sh` or natively after sourcing.
+`verification/logs/baseline_instructor/`. A supplementary run of the same day, added after the
+report cross-check, launched `display.launch.py gui:=false` on a fresh build of the same sources
+(`verification/logs/run_2026-09-28_gui_false/`, V26). Every stage script is in
+`verification/scripts/` and can be re-run with `verification/run_in_docker.sh` or natively after
+sourcing; the import review of V3, the path search of V21 and the archive build of V25 were run by hand
+with the commands recorded in their logs.
 
 ## 1. Execution environment
 
@@ -53,7 +57,8 @@ Statuses: *Passed by static inspection*, *Passed by build*, *Passed by runtime t
 | V22 | Python syntax / style | flake8 and pep257 via `colcon test` | Python files | Passed by build/test for `arduinobot_py_examples` and the description launch files | `10_build.log` | – |
 | V23 | Optional Gazebo launch | – | `gazebo.launch.py` | **Not tested** – `ros_gz_sim` not installable in the preparation environment; static review only (A8, A9 in the audit) | – | run on the target; check mesh resolution with the installed Fortress version |
 | V24 | ros2_control, MoveIt 2, application, Alexa, firmware, hardware | – | later sections | **Not tested** (outside scope; no hardware actuated) | – | future work |
-| V25 | Portable source archive | extract `dist/arduinobot_ws_source_2026-09-28.tar.gz`, `colcon build --symlink-install` | archive | Passed by build – 3 packages, 6 executables | `60_source_archive_build.log` | – |
+| V25 | Portable source archive | verify checksum, extract `dist/arduinobot_ws_source_2026-09-28.tar.gz`, `colcon build --symlink-install` (re-run on the final archive) | archive | Passed by build – checksum OK, 3 packages, 6 executables | `60_source_archive_build.log` | – |
+| V26 | Launch without the slider GUI | `ros2 launch arduinobot_description display.launch.py gui:=false` under Xvfb | `display.launch.py` | Passed by runtime test – nodes `/joint_state_publisher`, `/robot_state_publisher`, `/rviz2`; one `/joint_states` publisher (joint_state_publisher) publishing `joint_1`…`joint_5`; RViz is the only window. On SIGINT upstream `joint_state_publisher` prints the `ExternalShutdownException` traceback noted in V20 | `run_2026-09-28_gui_false/55_display_gui_false.log`, `55_display_gui_false_rviz.png` | – |
 
 ## 3. What this verification does not show
 
@@ -77,6 +82,7 @@ WS=~/arduinobot_ws OUT=/tmp/verify bash <assignment>/verification/scripts/20_pub
 WS=~/arduinobot_ws OUT=/tmp/verify bash <assignment>/verification/scripts/30_parameters.sh
 WS=~/arduinobot_ws OUT=/tmp/verify bash <assignment>/verification/scripts/40_model_tf.sh
 WS=~/arduinobot_ws OUT=/tmp/verify bash <assignment>/verification/scripts/50_rviz.sh   # uses $DISPLAY if set
+WS=~/arduinobot_ws OUT=/tmp/verify bash <assignment>/verification/scripts/55_display_gui_false.sh
 ```
 
 Expected results are those of section 2. Additionally: move each slider in

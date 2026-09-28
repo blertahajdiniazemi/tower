@@ -161,8 +161,9 @@ check_urdf /tmp/arduinobot.urdf
 
 Moving the `joint_1` … `joint_4` sliders moves the model in RViz; `joint_5` (left finger) is
 a mimic joint and follows `joint_4` with multiplier −1. When the launch is stopped with
-`Ctrl+C`, launch reports `joint_state_publisher_gui … exit code -2`: the upstream GUI
-terminates on SIGINT by design; `robot_state_publisher` and `rviz2` finish cleanly.
+`Ctrl+C`, launch reports `joint_state_publisher_gui … exit code -2`, and with `gui:=false`
+the upstream `joint_state_publisher` prints an `ExternalShutdownException` traceback. Both
+are upstream behaviour and were left unchanged; `robot_state_publisher` and `rviz2` finish cleanly.
 
 In a virtual machine without 3D acceleration, RViz may need `export LIBGL_ALWAYS_SOFTWARE=1`.
 
@@ -175,7 +176,7 @@ not be installed in the preparation environment; see `docs/VERIFICATION.md`.
 ## 4. Re-running the verification
 
 `verification/run_in_docker.sh` repeats the build, messaging, parameter, model/TF and RViz
-checks inside an Ubuntu 22.04 / ROS 2 Humble container and writes logs and screenshots:
+(both `gui` settings) checks inside an Ubuntu 22.04 / ROS 2 Humble container and writes logs and screenshots:
 
 ```bash
 ./verification/docker/fetch_underlay.sh

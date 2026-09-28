@@ -1,0 +1,41 @@
+// Figure: software architecture of the delivered manipulator visualisation
+// Solid = started by display.launch.py; dashed grey = optional / not part of the verified core.
+digraph arch {
+  graph [rankdir=TB, fontname="Liberation Sans", fontsize=13, nodesep=0.35, ranksep=0.5, pad=0.15, newrank=true];
+  node  [fontname="Liberation Sans", fontsize=13, shape=box, style="rounded,filled", color="#1f3b5a", fillcolor="#dbe7f3", penwidth=1.3];
+  edge  [fontname="Liberation Sans", fontsize=11, color="#1f3b5a", penwidth=1.3];
+
+  xacro_file [shape=note, fillcolor="#f2f2f2", label=<<b>urdf/arduinobot.urdf.xacro</b><br/><font point-size="11">links, joints, limits, mimic,<br/>mesh URIs package://…/meshes/*.STL</font>>];
+  xacro_cmd [shape=component, fillcolor="#f2f2f2", label=<<b>xacro</b><br/><font point-size="11">Command() substitution<br/>in display.launch.py</font>>];
+  rsp [label=<<b>robot_state_publisher</b><br/><font point-size="11">parameter robot_description</font>>];
+  jsp [label=<<b>joint_state_publisher_gui</b><br/><font point-size="11">gui:=true (default), or<br/>joint_state_publisher with gui:=false</font>>];
+  t_rd [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/robot_description</b><br/><font point-size="11">std_msgs/msg/String<br/>transient local</font>>];
+  t_js [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/joint_states</b><br/><font point-size="11">sensor_msgs/msg/JointState<br/>joint_1 … joint_5</font>>];
+  t_tf [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/tf</b><br/><font point-size="11">tf2_msgs/msg/TFMessage<br/>movable joints</font>>];
+  t_tfs [shape=box, style="filled", fillcolor="#f6e3cf", color="#b5651d", label=<<b>/tf_static</b><br/><font point-size="11">tf2_msgs/msg/TFMessage<br/>fixed joints</font>>];
+  rviz [label=<<b>rviz2</b><br/><font point-size="11">-d rviz/display.rviz · Fixed Frame base_link<br/>RobotModel and TF displays</font>>];
+  meshes [shape=folder, fillcolor="#f2f2f2", label=<<b>meshes/*.STL</b><br/><font point-size="11">instructor assets</font>>];
+
+  subgraph cluster_opt {
+    label=<<i>Optional / outside the verified core</i>>; labeljust=l; style="rounded,dashed"; color="#9a9a9a"; fontcolor="#6b6b6b"; fontsize=12;
+    node [color="#9a9a9a", fillcolor="#f7f7f7", fontcolor="#555555", style="rounded,filled,dashed"];
+    gz [label=<<b>launch/gazebo.launch.py</b><br/><font point-size="11">ros_gz_sim · create · /clock bridge<br/>instructor file, not run here</font>>];
+    later [label=<<b>Later instructor sections</b><br/><font point-size="11">ros2_control, MoveIt 2, firmware,<br/>Alexa: not in this workspace</font>>];
+    gz -> later [style=invis];
+  }
+
+  {rank=same; xacro_file; xacro_cmd; gz}
+  {rank=same; rsp; jsp; later}
+  {rank=same; t_rd; t_js; t_tf; t_tfs}
+  {rank=same; rviz; meshes}
+
+  xacro_file -> xacro_cmd [label=" file path "];
+  xacro_cmd -> rsp [label=" URDF (XML string) "];
+  rsp -> t_rd; rsp -> t_tf; rsp -> t_tfs;
+  t_rd -> jsp [constraint=false];
+  jsp -> t_js;
+  t_js -> rsp [constraint=false, label=" subscribe "];
+  t_rd -> rviz; t_tf -> rviz; t_tfs -> rviz;
+  meshes -> rviz [style=dashed, label=" package:// URIs "];
+  xacro_file -> gz [style=dashed, color="#9a9a9a", constraint=false];
+}

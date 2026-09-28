@@ -1,0 +1,9 @@
+[INFO] [1790569408.204277312] [robot_state_publisher]: got segment base_link
+[INFO] [1790569408.204469841] [robot_state_publisher]: got segment base_plate
+[INFO] [1790569408.204493520] [robot_state_publisher]: got segment claw_support
+[INFO] [1790569408.204498754] [robot_state_publisher]: got segment forward_drive_arm
+[INFO] [1790569408.204502246] [robot_state_publisher]: got segment gripper_left
+[INFO] [1790569408.204505199] [robot_state_publisher]: got segment gripper_right
+[INFO] [1790569408.204508458] [robot_state_publisher]: got segment horizontal_arm
+[INFO] [1790569408.204511924] [robot_state_publisher]: got segment world
+[INFO] [1790569457.626367211] [rclcpp]: signal_handler(SIGINT/SIGTERM)

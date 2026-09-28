@@ -1,0 +1,13 @@
+$ tar -xzf arduinobot_ws_source_2026-09-28.tar.gz; cd arduinobot_ws; colcon build --symlink-install
+Finished <<< arduinobot_description [1.62s]
+Finished <<< arduinobot_py_examples [1.70s]
+Finished <<< arduinobot_cpp_examples [19.4s]
+
+Summary: 3 packages finished [19.7s]
+$ ros2 pkg executables
+arduinobot_cpp_examples simple_parameter
+arduinobot_cpp_examples simple_publisher
+arduinobot_cpp_examples simple_subscriber
+arduinobot_py_examples simple_parameter
+arduinobot_py_examples simple_publisher
+arduinobot_py_examples simple_subscriber

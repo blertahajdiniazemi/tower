@@ -1,0 +1,2 @@
+[INFO] [1790569096.745248090] [simple_publisher]: Publishing at 1 Hz
+[INFO] [1790569130.075204997] [rclcpp]: signal_handler(SIGINT/SIGTERM)

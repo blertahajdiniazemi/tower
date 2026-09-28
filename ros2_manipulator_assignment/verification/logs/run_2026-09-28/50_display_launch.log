@@ -1,0 +1,26 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-28-04-24-21-188314-35d3d1649630-44
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [joint_state_publisher_gui-1]: process started with pid [47]
+[INFO] [robot_state_publisher-2]: process started with pid [49]
+[INFO] [rviz2-3]: process started with pid [51]
+[robot_state_publisher-2] [INFO] [1790569461.373745418] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-2] [INFO] [1790569461.373940014] [robot_state_publisher]: got segment base_plate
+[robot_state_publisher-2] [INFO] [1790569461.373947098] [robot_state_publisher]: got segment claw_support
+[robot_state_publisher-2] [INFO] [1790569461.373951232] [robot_state_publisher]: got segment forward_drive_arm
+[robot_state_publisher-2] [INFO] [1790569461.373954820] [robot_state_publisher]: got segment gripper_left
+[robot_state_publisher-2] [INFO] [1790569461.373958012] [robot_state_publisher]: got segment gripper_right
+[robot_state_publisher-2] [INFO] [1790569461.373960916] [robot_state_publisher]: got segment horizontal_arm
+[robot_state_publisher-2] [INFO] [1790569461.373963953] [robot_state_publisher]: got segment world
+[rviz2-3] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+[rviz2-3] [INFO] [1790569461.562763499] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1790569461.563748015] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[rviz2-3] [INFO] [1790569461.615300602] [rviz2]: Stereo is NOT SUPPORTED
+[joint_state_publisher_gui-1] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+[joint_state_publisher_gui-1] [INFO] [1790569461.713176455] [joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...
+[joint_state_publisher_gui-1] [INFO] [1790569461.726053268] [joint_state_publisher]: Centering
+[joint_state_publisher_gui-1] [INFO] [1790569461.926354694] [joint_state_publisher]: Centering
+[robot_state_publisher-2] [INFO] [1790569505.440452730] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1790569505.440570156] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [joint_state_publisher_gui-1]: process has died [pid 47, exit code -2, cmd '/opt/underlay/install/lib/joint_state_publisher_gui/joint_state_publisher_gui --ros-args'].
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 49]
+[INFO] [rviz2-3]: process has finished cleanly [pid 51]

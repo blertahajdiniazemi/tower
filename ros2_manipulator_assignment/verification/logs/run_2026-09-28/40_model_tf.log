@@ -1,0 +1,400 @@
+
+$ bash -c xacro /ws/install/arduinobot_description/share/arduinobot_description/urdf/arduinobot.urdf.xacro > /out/arduinobot_expanded.urdf
+[exit code: 0]
+
+$ check_urdf /out/arduinobot_expanded.urdf
+robot name is: arduinobot
+---------- Successfully Parsed XML ---------------
+root Link: world has 1 child(ren)
+    child(1):  base_link
+        child(1):  base_plate
+            child(1):  forward_drive_arm
+                child(1):  horizontal_arm
+                    child(1):  claw_support
+                        child(1):  gripper_right
+                        child(2):  gripper_left
+[exit code: 0]
+
+$ python3 /scripts/check_model.py /out/arduinobot_expanded.urdf /out/model_report.json
+Robot name: arduinobot
+Links (8): world, base_link, base_plate, forward_drive_arm, horizontal_arm, claw_support, gripper_right, gripper_left
+
+Joints:
+  virtual_joint                   fixed     world              -> base_link          xyz=[0.0, 0.0, 0.0] axis=None limit=None mimic=None
+  joint_1                         revolute  base_link          -> base_plate         xyz=[0.0, 0.0, 0.307] axis=[0.0, 0.0, 1.0] limit={'lower': -1.570796326795, 'upper': 1.570796326795, 'effort': 30.0, 'velocity': 10.0} mimic=None
+  joint_2                         revolute  base_plate         -> forward_drive_arm  xyz=[-0.02, 0.0, 0.35] axis=[1.0, 0.0, 0.0] limit={'lower': -1.570796326795, 'upper': 1.570796326795, 'effort': 30.0, 'velocity': 10.0} mimic=None
+  joint_3                         revolute  forward_drive_arm  -> horizontal_arm     xyz=[0.0, 0.0, 0.8] axis=[1.0, 0.0, 0.0] limit={'lower': -1.570796326795, 'upper': 1.570796326795, 'effort': 30.0, 'velocity': 10.0} mimic=None
+  horizontal_arm_to_claw_support  fixed     horizontal_arm     -> claw_support       xyz=[0.0, 0.82, 0.0] axis=None limit=None mimic=None
+  joint_4                         revolute  claw_support       -> gripper_right      xyz=[-0.04, 0.13, -0.1] axis=[0.0, 0.0, 1.0] limit={'lower': -1.570796326795, 'upper': 0.0, 'effort': 30.0, 'velocity': 10.0} mimic=None
+  joint_5                         revolute  claw_support       -> gripper_left       xyz=[-0.22, 0.13, -0.1] axis=[0.0, 0.0, 1.0] limit={'lower': 0.0, 'upper': 1.570796326795, 'effort': 30.0, 'velocity': 10.0} mimic={'joint': 'joint_4', 'multiplier': -1.0, 'offset': 0.0}
+
+Tree checks:
+  PASS  single root link (found ['world'])
+  PASS  every non-root link has exactly one parent
+  PASS  all 8 links reachable from the root
+
+Checklist comparison:
+  PASS  virtual_joint is fixed world -> base_link
+  PASS  joint_1 is revolute base_link -> base_plate
+  PASS  joint_2 is revolute base_plate -> forward_drive_arm
+  PASS  joint_3 is revolute forward_drive_arm -> horizontal_arm
+  PASS  horizontal_arm_to_claw_support is fixed horizontal_arm -> claw_support
+  PASS  joint_4 is revolute claw_support -> gripper_right
+  PASS  joint_5 is revolute claw_support -> gripper_left
+  PASS  no joints beyond the checklist
+  PASS  joint_1 has an axis and limits
+  PASS  joint_2 has an axis and limits
+  PASS  joint_3 has an axis and limits
+  PASS  joint_4 has an axis and limits
+  PASS  joint_5 has an axis and limits
+  PASS  joint_5 mimics existing joint joint_4
+  INFO  non-fixed joints in URDF: 5 ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5']
+  INFO  independently commanded joints (non-mimic): 4 ['joint_1', 'joint_2', 'joint_3', 'joint_4']
+
+Mesh resolution:
+  PASS  base_link visual -> package://arduinobot_description/meshes/basement.STL
+  PASS  base_link collision -> package://arduinobot_description/meshes/basement.STL
+  PASS  base_plate visual -> package://arduinobot_description/meshes/base_plate.STL
+  PASS  base_plate collision -> package://arduinobot_description/meshes/base_plate.STL
+  PASS  forward_drive_arm visual -> package://arduinobot_description/meshes/forward_drive_arm.STL
+  PASS  forward_drive_arm collision -> package://arduinobot_description/meshes/forward_drive_arm.STL
+  PASS  horizontal_arm visual -> package://arduinobot_description/meshes/horizontal_arm.STL
+  PASS  horizontal_arm collision -> package://arduinobot_description/meshes/horizontal_arm.STL
+  PASS  claw_support visual -> package://arduinobot_description/meshes/claw_support.STL
+  PASS  claw_support collision -> package://arduinobot_description/meshes/claw_support.STL
+  PASS  gripper_right visual -> package://arduinobot_description/meshes/right_finger.STL
+  PASS  gripper_right collision -> package://arduinobot_description/meshes/right_finger.STL
+  PASS  gripper_left visual -> package://arduinobot_description/meshes/left_finger.STL
+  PASS  gripper_left collision -> package://arduinobot_description/meshes/left_finger.STL
+
+Visual mesh sizes (file units x scale):
+  base_link          basement.STL              20190 triangles, raw extent ['94.7', '87.5', '31.0'], scaled extent ['0.947', '0.875', '0.310'] m
+  base_plate         base_plate.STL            54090 triangles, raw extent ['72.0', '76.6', '57.1'], scaled extent ['0.720', '0.766', '0.571'] m
+  forward_drive_arm  forward_drive_arm.STL     42672 triangles, raw extent ['92.5', '29.0', '15.0'], scaled extent ['0.925', '0.290', '0.150'] m
+  horizontal_arm     horizontal_arm.STL        34824 triangles, raw extent ['127.5', '15.0', '8.0'], scaled extent ['1.275', '0.150', '0.080'] m
+  claw_support       claw_support.STL          11818 triangles, raw extent ['54.0', '25.0', '38.2'], scaled extent ['0.540', '0.250', '0.382'] m
+  gripper_right      right_finger.STL           1974 triangles, raw extent ['58.4', '14.0', '9.0'], scaled extent ['0.584', '0.140', '0.090'] m
+  gripper_left       left_finger.STL            1964 triangles, raw extent ['58.4', '14.5', '9.0'], scaled extent ['0.584', '0.145', '0.090'] m
+
+RESULT: PASS (0 failure(s))
+[exit code: 0]
+
+$ bash -c cd /out && urdf_to_graphviz arduinobot_expanded.urdf arduinobot_urdf_graph
+Created file arduinobot_urdf_graph.gv
+Created file arduinobot_urdf_graph.pdf
+[exit code: 0]
+
+# robot_state_publisher + joint_state_publisher with fixed example joint values
+
+$ ros2 node list --no-daemon --spin-time 5
+/joint_state_publisher
+/robot_state_publisher
+[exit code: 0]
+
+$ ros2 topic info -v /joint_states --no-daemon --spin-time 5
+Type: sensor_msgs/msg/JointState
+
+Publisher count: 1
+
+Node name: joint_state_publisher
+Node namespace: /
+Topic type: sensor_msgs/msg/JointState
+Endpoint type: PUBLISHER
+GID: 01.0f.7f.01.3a.00.1b.83.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: robot_state_publisher
+Node namespace: /
+Topic type: sensor_msgs/msg/JointState
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.3b.00.d5.b9.00.00.00.00.00.00.15.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+[exit code: 0]
+
+$ timeout -s INT 15 ros2 topic echo --once /joint_states sensor_msgs/msg/JointState
+header:
+  stamp:
+    sec: 1790569423
+    nanosec: 692053244
+  frame_id: ''
+name:
+- joint_1
+- joint_2
+- joint_3
+- joint_4
+- joint_5
+position:
+- 0.5
+- 0.3
+- -0.4
+- -0.6
+- 0.6
+velocity: []
+effort: []
+---
+[exit code: 0]
+
+$ ros2 topic info -v /robot_description --no-daemon --spin-time 5
+Type: std_msgs/msg/String
+
+Publisher count: 1
+
+Node name: robot_state_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: PUBLISHER
+GID: 01.0f.7f.01.3b.00.d5.b9.00.00.00.00.00.00.14.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: joint_state_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.3a.00.1b.83.00.00.00.00.00.00.11.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+[exit code: 0]
+
+$ timeout -s INT 15 ros2 topic echo --once --qos-durability transient_local --qos-reliability reliable /tf_static tf2_msgs/msg/TFMessage
+transforms:
+- header:
+    stamp:
+      sec: 1790569408
+      nanosec: 205592841
+    frame_id: horizontal_arm
+  child_frame_id: claw_support
+  transform:
+    translation:
+      x: 0.0
+      y: 0.82
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+- header:
+    stamp:
+      sec: 1790569408
+      nanosec: 205592841
+    frame_id: world
+  child_frame_id: base_link
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+---
+[exit code: 0]
+
+$ timeout -s INT 15 ros2 topic echo --once /tf tf2_msgs/msg/TFMessage
+transforms:
+- header:
+    stamp:
+      sec: 1790569431
+      nanosec: 92162259
+    frame_id: base_link
+  child_frame_id: base_plate
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.307
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.2474039592545229
+      w: 0.968912421710645
+- header:
+    stamp:
+      sec: 1790569431
+      nanosec: 92162259
+    frame_id: base_plate
+  child_frame_id: forward_drive_arm
+  transform:
+    translation:
+      x: -0.02
+      y: 0.0
+      z: 0.35
+    rotation:
+      x: 0.14943813247359922
+      y: 0.0
+      z: 0.0
+      w: 0.9887710779360422
+- header:
+    stamp:
+      sec: 1790569431
+      nanosec: 92162259
+    frame_id: forward_drive_arm
+  child_frame_id: horizontal_arm
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.8
+    rotation:
+      x: -0.19866933079506124
+      y: 0.0
+      z: 0.0
+      w: 0.9800665778412415
+- header:
+    stamp:
+      sec: 1790569431
+      nanosec: 92162259
+    frame_id: claw_support
+  child_frame_id: gripper_right
+  transform:
+    translation:
+      x: -0.04
+      y: 0.13
+      z: -0.1
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: -0.29552020666133955
+      w: 0.9553364891256061
+- header:
+    stamp:
+      sec: 1790569431
+      nanosec: 92162259
+    frame_id: claw_support
+  child_frame_id: gripper_left
+  transform:
+    translation:
+      x: -0.22
+      y: 0.13
+      z: -0.1
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.29552020666133955
+      w: 0.9553364891256061
+---
+[exit code: 0]
+
+$ timeout -s INT 12 ros2 topic hz /joint_states --window 5
+average rate: 9.994
+	min: 0.100s max: 0.100s std dev: 0.00017s window: 5
+average rate: 9.995
+	min: 0.100s max: 0.100s std dev: 0.00022s window: 5
+average rate: 9.998
+	min: 0.100s max: 0.100s std dev: 0.00011s window: 5
+average rate: 9.935
+	min: 0.098s max: 0.103s std dev: 0.00182s window: 5
+average rate: 8.916
+	min: 0.100s max: 0.161s std dev: 0.02433s window: 5
+average rate: 10.000
+	min: 0.100s max: 0.100s std dev: 0.00012s window: 5
+average rate: 9.997
+	min: 0.100s max: 0.100s std dev: 0.00006s window: 5
+average rate: 10.007
+	min: 0.100s max: 0.100s std dev: 0.00010s window: 5
+average rate: 9.998
+	min: 0.099s max: 0.101s std dev: 0.00035s window: 5
+average rate: 10.000
+	min: 0.100s max: 0.100s std dev: 0.00020s window: 5
+[exit code: 124]
+
+$ timeout -s INT 4 ros2 run tf2_ros tf2_echo world claw_support
+[INFO] [1790569443.936552680] [tf2_echo]: Waiting for transform world ->  claw_support: Invalid frame ID "world" passed to canTransform argument target_frame - frame does not exist
+At time 1790569445.492076585
+- Translation: [-0.295, 0.499, 1.339]
+- Rotation: in Quaternion (xyzw) [-0.048, -0.012, 0.247, 0.968]
+- Rotation: in RPY (radian) [-0.100, 0.000, 0.500]
+- Rotation: in RPY (degree) [-5.730, 0.000, 28.648]
+- Matrix:
+  0.878 -0.477 -0.048 -0.295
+  0.479  0.873  0.088  0.499
+ -0.000 -0.100  0.995  1.339
+  0.000  0.000  0.000  1.000
+At time 1790569446.492131426
+- Translation: [-0.295, 0.499, 1.339]
+- Rotation: in Quaternion (xyzw) [-0.048, -0.012, 0.247, 0.968]
+- Rotation: in RPY (radian) [-0.100, 0.000, 0.500]
+- Rotation: in RPY (degree) [-5.730, 0.000, 28.648]
+- Matrix:
+  0.878 -0.477 -0.048 -0.295
+  0.479  0.873  0.088  0.499
+ -0.000 -0.100  0.995  1.339
+  0.000  0.000  0.000  1.000
+[INFO] [1790569447.445282419] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exit code: 124]
+
+$ timeout -s INT 4 ros2 run tf2_ros tf2_echo claw_support gripper_left
+[INFO] [1790569447.735804765] [tf2_echo]: Waiting for transform claw_support ->  gripper_left: Invalid frame ID "claw_support" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1790569449.723995248] [tf2_echo]: Waiting for transform claw_support ->  gripper_left: Invalid frame ID "claw_support" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1790569451.587310680] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exit code: 124]
+
+$ bash -c cd /out && timeout 30 ros2 run tf2_tools view_frames
+[INFO] [1790569452.108913487] [view_frames]: Listening to tf data for 5.0 seconds...
+[INFO] [1790569457.194764834] [view_frames]: Generating graph in frames.pdf file...
+[INFO] [1790569457.198195877] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml="base_plate: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10.196\n  most_recent_transform: 1790569457.192179\n  oldest_transform: 1790569452.092003\n  buffer_length: 5.100\nbase_link: \n  parent: 'world'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nforward_drive_arm: \n  parent: 'base_plate'\n  broadcaster: 'default_authority'\n  rate: 10.196\n  most_recent_transform: 1790569457.192179\n  oldest_transform: 1790569452.092003\n  buffer_length: 5.100\nhorizontal_arm: \n  parent: 'forward_drive_arm'\n  broadcaster: 'default_authority'\n  rate: 10.196\n  most_recent_transform: 1790569457.192179\n  oldest_transform: 1790569452.092003\n  buffer_length: 5.100\ngripper_right: \n  parent: 'claw_support'\n  broadcaster: 'default_authority'\n  rate: 10.196\n  most_recent_transform: 1790569457.192179\n  oldest_transform: 1790569452.092003\n  buffer_length: 5.100\nclaw_support: \n  parent: 'horizontal_arm'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\ngripper_left: \n  parent: 'claw_support'\n  broadcaster: 'default_authority'\n  rate: 10.196\n  most_recent_transform: 1790569457.192179\n  oldest_transform: 1790569452.092003\n  buffer_length: 5.100\n")
+[exit code: 0]
+--- robot_state_publisher log
+[INFO] [1790569408.204277312] [robot_state_publisher]: got segment base_link
+[INFO] [1790569408.204469841] [robot_state_publisher]: got segment base_plate
+[INFO] [1790569408.204493520] [robot_state_publisher]: got segment claw_support
+[INFO] [1790569408.204498754] [robot_state_publisher]: got segment forward_drive_arm
+[INFO] [1790569408.204502246] [robot_state_publisher]: got segment gripper_left
+[INFO] [1790569408.204505199] [robot_state_publisher]: got segment gripper_right
+[INFO] [1790569408.204508458] [robot_state_publisher]: got segment horizontal_arm
+[INFO] [1790569408.204511924] [robot_state_publisher]: got segment world
+[INFO] [1790569457.626367211] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+--- joint_state_publisher log
+[INFO] [1790569408.488031653] [joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...
+Traceback (most recent call last):
+  File "/opt/underlay/install/lib/joint_state_publisher/joint_state_publisher", line 33, in <module>
+    sys.exit(load_entry_point('joint-state-publisher==2.4.0', 'console_scripts', 'joint_state_publisher')())
+  File "/opt/underlay/install/lib/python3.10/site-packages/joint_state_publisher/joint_state_publisher.py", line 466, in main
+    rclpy.spin(jsp)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+[ros2run]: Process exited with failure 1

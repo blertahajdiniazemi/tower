@@ -1,0 +1,440 @@
+diff -ruN a/src/arduinobot_cpp_examples/src/simple_parameter.cpp b/src/arduinobot_cpp_examples/src/simple_parameter.cpp
+--- a/src/arduinobot_cpp_examples/src/simple_parameter.cpp	2026-09-28 04:11:37.607281326 +0000
++++ b/src/arduinobot_cpp_examples/src/simple_parameter.cpp	2026-09-28 04:11:37.618081291 +0000
+@@ -24,20 +24,39 @@
+     rcl_interfaces::msg::SetParametersResult paramChangeCallback(const std::vector<rclcpp::Parameter> &parameters)
+     {
+         rcl_interfaces::msg::SetParametersResult result;
++
++        // Check the whole request first, so that one valid parameter cannot
++        // make an update containing an invalid one succeed.
++        for(const auto& param : parameters)
++        {
++            if(param.get_name() == "simple_int_param" && param.get_type() != rclcpp::ParameterType::PARAMETER_INTEGER)
++            {
++                result.successful = false;
++                result.reason = "simple_int_param must be of type integer";
++                return result;
++            }
++            if(param.get_name() == "simple_string_param" && param.get_type() != rclcpp::ParameterType::PARAMETER_STRING)
++            {
++                result.successful = false;
++                result.reason = "simple_string_param must be of type string";
++                return result;
++            }
++        }
++
++        // Parameters not handled here (e.g. use_sim_time) are accepted unchanged
+         for(const auto& param : parameters)
+         {
+-            if(param.get_name() == "simple_int_param" && param.get_type() == rclcpp::ParameterType::PARAMETER_INTEGER)
++            if(param.get_name() == "simple_int_param")
+             {
+                 RCLCPP_INFO_STREAM(get_logger(), "Param simple_int_param changed! New value is " << param.as_int());
+-                result.successful = true;
+             }
+-            if(param.get_name() == "simple_string_param" && param.get_type() == rclcpp::ParameterType::PARAMETER_STRING)
++            if(param.get_name() == "simple_string_param")
+             {
+                 RCLCPP_INFO_STREAM(get_logger(), "Param simple_string_param changed! New value is " << param.as_string());
+-                result.successful = true;
+             }
+         }
+-        
++
++        result.successful = true;
+         return result;
+     }
+ };
+@@ -50,4 +69,4 @@
+   rclcpp::spin(node);
+   rclcpp::shutdown();
+   return 0;
+-}
+\ No newline at end of file
++}
+diff -ruN a/src/arduinobot_description/CMakeLists.txt b/src/arduinobot_description/CMakeLists.txt
+--- a/src/arduinobot_description/CMakeLists.txt	2026-09-28 04:11:37.607352533 +0000
++++ b/src/arduinobot_description/CMakeLists.txt	2026-09-28 04:11:37.618148118 +0000
+@@ -11,6 +11,9 @@
+ 
+ if(BUILD_TESTING)
+   find_package(ament_lint_auto REQUIRED)
++  # The source files carry no per-file copyright headers (the package is
++  # licensed as a whole, see package.xml), so the copyright linter is skipped.
++  set(ament_cmake_copyright_FOUND TRUE)
+   ament_lint_auto_find_test_dependencies()
+ endif()
+ 
+diff -ruN a/src/arduinobot_description/launch/display.launch.py b/src/arduinobot_description/launch/display.launch.py
+--- a/src/arduinobot_description/launch/display.launch.py	2026-09-28 04:11:37.607408660 +0000
++++ b/src/arduinobot_description/launch/display.launch.py	2026-09-28 04:11:37.618211943 +0000
+@@ -3,6 +3,7 @@
+ 
+ from launch import LaunchDescription
+ from launch.actions import DeclareLaunchArgument
++from launch.conditions import IfCondition, UnlessCondition
+ from launch.substitutions import Command, LaunchConfiguration
+ 
+ from launch_ros.actions import Node
+@@ -17,6 +18,11 @@
+                                         ),
+                                       description="Absolute path to robot urdf file")
+ 
++    gui_arg = DeclareLaunchArgument(name="gui", default_value="true",
++                                    choices=["true", "false"],
++                                    description="Start joint_state_publisher_gui (true) or "
++                                                "the non-graphical joint_state_publisher")
++
+     robot_description = ParameterValue(Command(["xacro ", LaunchConfiguration("model")]),
+                                        value_type=str)
+ 
+@@ -26,9 +32,17 @@
+         parameters=[{"robot_description": robot_description}]
+     )
+ 
++    # Exactly one joint state source is started, selected by the "gui" argument
+     joint_state_publisher_gui_node = Node(
+         package="joint_state_publisher_gui",
+-        executable="joint_state_publisher_gui"
++        executable="joint_state_publisher_gui",
++        condition=IfCondition(LaunchConfiguration("gui"))
++    )
++
++    joint_state_publisher_node = Node(
++        package="joint_state_publisher",
++        executable="joint_state_publisher",
++        condition=UnlessCondition(LaunchConfiguration("gui"))
+     )
+ 
+     rviz_node = Node(
+@@ -41,7 +55,9 @@
+ 
+     return LaunchDescription([
+         model_arg,
++        gui_arg,
+         joint_state_publisher_gui_node,
++        joint_state_publisher_node,
+         robot_state_publisher_node,
+         rviz_node
+     ])
+diff -ruN a/src/arduinobot_description/launch/gazebo.launch.py b/src/arduinobot_description/launch/gazebo.launch.py
+--- a/src/arduinobot_description/launch/gazebo.launch.py	2026-09-28 04:11:37.607425629 +0000
++++ b/src/arduinobot_description/launch/gazebo.launch.py	2026-09-28 04:11:37.618228818 +0000
+@@ -18,7 +18,7 @@
+                                         arduinobot_description, "urdf", "arduinobot.urdf.xacro"
+                                         ),
+                                       description="Absolute path to robot urdf file"
+-    )
++                                      )
+ 
+     gazebo_resource_path = SetEnvironmentVariable(
+         name="GZ_SIM_RESOURCE_PATH",
+@@ -26,8 +26,6 @@
+             str(Path(arduinobot_description).parent.resolve())
+             ]
+         )
+-    
+-    ros_distro = os.environ["ROS_DISTRO"]
+ 
+     robot_description = ParameterValue(Command(["xacro ", LaunchConfiguration("model")]),
+                                        value_type=str)
+@@ -43,8 +41,7 @@
+                 PythonLaunchDescriptionSource([os.path.join(
+                     get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
+                 launch_arguments=[
+-                    ("gz_args", [" -v 4 -r empty.sdf "]
+-                    )
++                    ("gz_args", [" -v 4 -r empty.sdf "])
+                 ]
+              )
+ 
+diff -ruN a/src/arduinobot_description/package.xml b/src/arduinobot_description/package.xml
+--- a/src/arduinobot_description/package.xml	2026-09-28 04:11:37.614385628 +0000
++++ b/src/arduinobot_description/package.xml	2026-09-28 04:11:37.625983385 +0000
+@@ -9,11 +9,16 @@
+ 
+   <buildtool_depend>ament_cmake</buildtool_depend>
+ 
++  <exec_depend>ament_index_python</exec_depend>
++  <exec_depend>launch</exec_depend>
++  <exec_depend>launch_ros</exec_depend>
+   <exec_depend>robot_state_publisher</exec_depend>
+   <exec_depend>urdf</exec_depend>
++  <exec_depend>joint_state_publisher</exec_depend>
+   <exec_depend>joint_state_publisher_gui</exec_depend>
+   <exec_depend>rviz2</exec_depend>
+   <exec_depend>xacro</exec_depend>
++  <!-- Only needed by the optional launch/gazebo.launch.py (Gazebo via ros_gz) -->
+   <exec_depend>ros_gz_sim</exec_depend>
+   <exec_depend>ros_gz_bridge</exec_depend>
+   <exec_depend>ros2launch</exec_depend>
+diff -ruN a/src/arduinobot_description/rviz/display.rviz b/src/arduinobot_description/rviz/display.rviz
+--- a/src/arduinobot_description/rviz/display.rviz	2026-09-28 04:11:37.614444780 +0000
++++ b/src/arduinobot_description/rviz/display.rviz	2026-09-28 04:11:37.626034584 +0000
+@@ -53,8 +53,6 @@
+           Value: true
+         horizontal_arm:
+           Value: true
+-        tool_link:
+-          Value: true
+         world:
+           Value: true
+       Marker Scale: 1
+@@ -72,8 +70,7 @@
+                     gripper_left:
+                       {}
+                     gripper_right:
+-                      tool_link:
+-                        {}
++                      {}
+       Update Interval: 0
+       Value: true
+     - Alpha: 0.5
+@@ -83,7 +80,7 @@
+       Description Source: Topic
+       Description Topic:
+         Depth: 5
+-        Durability Policy: Volatile
++        Durability Policy: Transient Local
+         History Policy: Keep Last
+         Reliability Policy: Reliable
+         Value: /robot_description
+@@ -129,10 +126,6 @@
+           Show Axes: false
+           Show Trail: false
+           Value: true
+-        tool_link:
+-          Alpha: 1
+-          Show Axes: false
+-          Show Trail: false
+         world:
+           Alpha: 1
+           Show Axes: false
+diff -ruN a/src/arduinobot_py_examples/arduinobot_py_examples/simple_parameter.py b/src/arduinobot_py_examples/arduinobot_py_examples/simple_parameter.py
+--- a/src/arduinobot_py_examples/arduinobot_py_examples/simple_parameter.py	2026-09-28 04:11:37.614631568 +0000
++++ b/src/arduinobot_py_examples/arduinobot_py_examples/simple_parameter.py	2026-09-28 04:11:37.617154762 +0000
+@@ -1,11 +1,18 @@
++from rcl_interfaces.msg import SetParametersResult
+ import rclpy
++from rclpy.executors import ExternalShutdownException
+ from rclpy.node import Node
+-from rcl_interfaces.msg import SetParametersResult
+ from rclpy.parameter import Parameter
+ 
+ 
+ class SimpleParameter(Node):
+-    
++
++    # Parameters handled by this node and the type each one must keep
++    EXPECTED_TYPES = {
++        "simple_int_param": Parameter.Type.INTEGER,
++        "simple_string_param": Parameter.Type.STRING,
++    }
++
+     def __init__(self):
+         super().__init__("simple_parameter")
+         self.declare_parameter("simple_int_param", 28)
+@@ -14,28 +21,39 @@
+         self.add_on_set_parameters_callback(self.paramChangeCallback)
+ 
+     def paramChangeCallback(self, params):
+-        result = SetParametersResult()
+-
++        # Check the whole request first, so that one valid parameter cannot
++        # make an update containing an invalid one succeed.
+         for param in params:
++            expected_type = self.EXPECTED_TYPES.get(param.name)
++            if expected_type is not None and param.type_ != expected_type:
++                return SetParametersResult(
++                    successful=False,
++                    reason="%s must be of type %s" % (param.name, expected_type.name))
+ 
+-            if param.name == "simple_int_param" and param.type_ == Parameter.Type.INTEGER:
+-                self.get_logger().info("Param simple_int_param changed! New value is %d" % param.value)
+-                result.successful = True
+-
+-            if param.name == "simple_string_param" and param.type_ == Parameter.Type.STRING:
+-                self.get_logger().info("Param simple_string_param changed! New value is %s" % param.value)
+-                result.successful = True 
++        # Parameters not handled here (e.g. use_sim_time) are accepted unchanged
++        for param in params:
++            if param.name == "simple_int_param":
++                self.get_logger().info(
++                    "Param simple_int_param changed! New value is %d" % param.value)
++            elif param.name == "simple_string_param":
++                self.get_logger().info(
++                    "Param simple_string_param changed! New value is %s" % param.value)
+ 
+-        return result
++        return SetParametersResult(successful=True)
+ 
+ 
+ def main():
+     rclpy.init()
++
+     simple_parameter = SimpleParameter()
+-    rclpy.spin(simple_parameter)
+-    simple_parameter.destroy_node()
+-    rclpy.shutdown()
++    try:
++        rclpy.spin(simple_parameter)
++    except (KeyboardInterrupt, ExternalShutdownException):
++        pass
++    finally:
++        simple_parameter.destroy_node()
++        rclpy.try_shutdown()
+ 
+ 
+ if __name__ == "__main__":
+-    main()
+\ No newline at end of file
++    main()
+diff -ruN a/src/arduinobot_py_examples/arduinobot_py_examples/simple_publisher.py b/src/arduinobot_py_examples/arduinobot_py_examples/simple_publisher.py
+--- a/src/arduinobot_py_examples/arduinobot_py_examples/simple_publisher.py	2026-09-28 04:11:37.614647995 +0000
++++ b/src/arduinobot_py_examples/arduinobot_py_examples/simple_publisher.py	2026-09-28 04:11:37.617220375 +0000
+@@ -1,4 +1,5 @@
+ import rclpy
++from rclpy.executors import ExternalShutdownException
+ from rclpy.node import Node
+ from std_msgs.msg import String
+ 
+@@ -9,10 +10,11 @@
+         super().__init__("simple_publisher")
+         self.pub_ = self.create_publisher(String, "chatter", 10)
+         self.counter_ = 0
+-        self.frequency_ = 1.0
+-        self.get_logger().info("Publishing at %d Hz" % self.frequency_)
+-        
+-        self.timer_ = self.create_timer(self.frequency_, self.timerCallback)
++        self.frequency_ = 1.0  # publishing rate in Hz
++        self.get_logger().info("Publishing at %.1f Hz" % self.frequency_)
++
++        # create_timer() expects the timer period in seconds, not a frequency
++        self.timer_ = self.create_timer(1.0 / self.frequency_, self.timerCallback)
+ 
+     def timerCallback(self):
+         msg = String()
+@@ -25,10 +27,13 @@
+     rclpy.init()
+ 
+     simple_publisher = SimplePublisher()
+-    rclpy.spin(simple_publisher)
+-    
+-    simple_publisher.destroy_node()
+-    rclpy.shutdown()
++    try:
++        rclpy.spin(simple_publisher)
++    except (KeyboardInterrupt, ExternalShutdownException):
++        pass
++    finally:
++        simple_publisher.destroy_node()
++        rclpy.try_shutdown()
+ 
+ 
+ if __name__ == '__main__':
+diff -ruN a/src/arduinobot_py_examples/arduinobot_py_examples/simple_subscriber.py b/src/arduinobot_py_examples/arduinobot_py_examples/simple_subscriber.py
+--- a/src/arduinobot_py_examples/arduinobot_py_examples/simple_subscriber.py	2026-09-28 04:11:37.614671432 +0000
++++ b/src/arduinobot_py_examples/arduinobot_py_examples/simple_subscriber.py	2026-09-28 04:11:37.617236302 +0000
+@@ -1,4 +1,5 @@
+ import rclpy
++from rclpy.executors import ExternalShutdownException
+ from rclpy.node import Node
+ from std_msgs.msg import String
+ 
+@@ -8,7 +9,6 @@
+     def __init__(self):
+         super().__init__("simple_subscriber")
+         self.sub_ = self.create_subscription(String, "chatter", self.msgCallback, 10)
+-        self.sub_
+ 
+     def msgCallback(self, msg):
+         self.get_logger().info("I heard: %s" % msg.data)
+@@ -17,11 +17,14 @@
+ def main():
+     rclpy.init()
+ 
+-    simple_publisher = SimpleSubscriber()
+-    rclpy.spin(simple_publisher)
+-    
+-    simple_publisher.destroy_node()
+-    rclpy.shutdown()
++    simple_subscriber = SimpleSubscriber()
++    try:
++        rclpy.spin(simple_subscriber)
++    except (KeyboardInterrupt, ExternalShutdownException):
++        pass
++    finally:
++        simple_subscriber.destroy_node()
++        rclpy.try_shutdown()
+ 
+ 
+ if __name__ == '__main__':
+diff -ruN a/src/arduinobot_py_examples/test/test_simple_parameter.py b/src/arduinobot_py_examples/test/test_simple_parameter.py
+--- a/src/arduinobot_py_examples/test/test_simple_parameter.py	1970-01-01 00:00:00.000000000 +0000
++++ b/src/arduinobot_py_examples/test/test_simple_parameter.py	2026-09-28 04:11:37.617945442 +0000
+@@ -0,0 +1,64 @@
++"""Checks for the parameter-update contract of the simple_parameter node."""
++
++from arduinobot_py_examples.simple_parameter import SimpleParameter
++import pytest
++import rclpy
++from rclpy.parameter import Parameter
++
++
++@pytest.fixture
++def node():
++    rclpy.init()
++    simple_parameter = SimpleParameter()
++    yield simple_parameter
++    simple_parameter.destroy_node()
++    rclpy.shutdown()
++
++
++def test_defaults(node):
++    assert node.get_parameter("simple_int_param").value == 28
++    assert node.get_parameter("simple_string_param").value == "Antonio"
++
++
++def test_valid_updates_are_accepted(node):
++    results = node.set_parameters([
++        Parameter("simple_int_param", Parameter.Type.INTEGER, 30),
++        Parameter("simple_string_param", Parameter.Type.STRING, "ROS 2"),
++    ])
++    assert all(result.successful for result in results)
++    assert node.get_parameter("simple_int_param").value == 30
++    assert node.get_parameter("simple_string_param").value == "ROS 2"
++
++
++def test_parameters_not_handled_by_the_node_are_accepted(node):
++    result = node.set_parameters([Parameter("use_sim_time", Parameter.Type.BOOL, True)])[0]
++    assert result.successful
++    assert node.get_parameter("use_sim_time").value is True
++
++
++def test_wrong_type_is_rejected(node):
++    result = node.set_parameters([
++        Parameter("simple_int_param", Parameter.Type.STRING, "thirty")])[0]
++    assert not result.successful
++    assert node.get_parameter("simple_int_param").value == 28
++
++
++def test_batch_with_one_invalid_parameter_is_rejected_as_a_whole(node):
++    result = node.set_parameters_atomically([
++        Parameter("simple_int_param", Parameter.Type.INTEGER, 5),
++        Parameter("simple_string_param", Parameter.Type.INTEGER, 7),
++    ])
++    assert not result.successful
++    assert node.get_parameter("simple_int_param").value == 28
++    assert node.get_parameter("simple_string_param").value == "Antonio"
++
++
++def test_callback_rejects_mixed_batch(node):
++    # rclpy normally rejects a wrong type before the callback runs, because the
++    # declared type is enforced; the callback applies the same rule itself.
++    result = node.paramChangeCallback([
++        Parameter("simple_int_param", Parameter.Type.INTEGER, 5),
++        Parameter("simple_string_param", Parameter.Type.INTEGER, 7),
++    ])
++    assert not result.successful
++    assert "simple_string_param" in result.reason

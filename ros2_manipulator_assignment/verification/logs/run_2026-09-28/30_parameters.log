@@ -1,0 +1,173 @@
+
+================ arduinobot_py_examples/simple_parameter (ROS_DOMAIN_ID=31)
+
+$ ros2 param list /simple_parameter --no-daemon --spin-time 5
+  simple_int_param
+  simple_string_param
+  use_sim_time
+[exit code: 0]
+
+$ ros2 param describe /simple_parameter simple_int_param simple_string_param --no-daemon --spin-time 5
+Parameter name: simple_int_param
+  Type: integer
+  Constraints:
+Parameter name: simple_string_param
+  Type: string
+  Constraints:
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 28
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_string_param --no-daemon --spin-time 5
+String value is: Antonio
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_int_param 30 --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_string_param ROS 2 --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_int_param hello --no-daemon --spin-time 5
+Setting parameter failed: Wrong parameter type, expected 'Type.INTEGER' got 'Type.STRING'
+[exit code: 0]
+
+$ ros2 param set /simple_parameter use_sim_time true --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+# atomic update: valid simple_int_param=5 together with an INTEGER for simple_string_param
+
+$ ros2 service call /simple_parameter/set_parameters_atomically rcl_interfaces/srv/SetParametersAtomically {parameters: [{name: simple_int_param, value: {type: 2, integer_value: 5}}, {name: simple_string_param, value: {type: 2, integer_value: 7}}]}
+waiting for service to become available...
+requester: making request: rcl_interfaces.srv.SetParametersAtomically_Request(parameters=[rcl_interfaces.msg.Parameter(name='simple_int_param', value=rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=5, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[])), rcl_interfaces.msg.Parameter(name='simple_string_param', value=rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=7, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]))])
+
+response:
+rcl_interfaces.srv.SetParametersAtomically_Response(result=rcl_interfaces.msg.SetParametersResult(successful=False, reason="Wrong parameter type, expected 'Type.STRING' got 'Type.INTEGER'"))
+
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 30
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_string_param --no-daemon --spin-time 5
+String value is: ROS 2
+[exit code: 0]
+
+$ ros2 param dump /simple_parameter --no-daemon --spin-time 5
+/simple_parameter:
+  ros__parameters:
+    simple_int_param: 30
+    simple_string_param: ROS 2
+    use_sim_time: true
+
+[exit code: 0]
+--- node log
+[INFO] [1790569191.480795149] [simple_parameter]: Param simple_int_param changed! New value is 30
+[INFO] [1790569201.901607218] [simple_parameter]: Param simple_string_param changed! New value is ROS 2
+
+# start-up override from the command line
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 42
+[exit code: 0]
+
+================ arduinobot_cpp_examples/simple_parameter (ROS_DOMAIN_ID=32)
+
+$ ros2 param list /simple_parameter --no-daemon --spin-time 5
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  simple_int_param
+  simple_string_param
+  use_sim_time
+[exit code: 0]
+
+$ ros2 param describe /simple_parameter simple_int_param simple_string_param --no-daemon --spin-time 5
+Parameter name: simple_int_param
+  Type: integer
+  Constraints:
+Parameter name: simple_string_param
+  Type: string
+  Constraints:
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 28
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_string_param --no-daemon --spin-time 5
+String value is: Antonio
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_int_param 30 --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_string_param ROS 2 --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+$ ros2 param set /simple_parameter simple_int_param hello --no-daemon --spin-time 5
+Setting parameter failed: Wrong parameter type, parameter {simple_int_param} is of type {integer}, setting it to {string} is not allowed.
+[exit code: 0]
+
+$ ros2 param set /simple_parameter use_sim_time true --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+# atomic update: valid simple_int_param=5 together with an INTEGER for simple_string_param
+
+$ ros2 service call /simple_parameter/set_parameters_atomically rcl_interfaces/srv/SetParametersAtomically {parameters: [{name: simple_int_param, value: {type: 2, integer_value: 5}}, {name: simple_string_param, value: {type: 2, integer_value: 7}}]}
+requester: making request: rcl_interfaces.srv.SetParametersAtomically_Request(parameters=[rcl_interfaces.msg.Parameter(name='simple_int_param', value=rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=5, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[])), rcl_interfaces.msg.Parameter(name='simple_string_param', value=rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=7, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]))])
+
+response:
+rcl_interfaces.srv.SetParametersAtomically_Response(result=rcl_interfaces.msg.SetParametersResult(successful=False, reason='Wrong parameter type, parameter {simple_string_param} is of type {string}, setting it to {integer} is not allowed.'))
+
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 30
+[exit code: 0]
+
+$ ros2 param get /simple_parameter simple_string_param --no-daemon --spin-time 5
+String value is: ROS 2
+[exit code: 0]
+
+$ ros2 param dump /simple_parameter --no-daemon --spin-time 5
+/simple_parameter:
+  ros__parameters:
+    qos_overrides:
+      /clock:
+        subscription:
+          depth: 1
+          durability: volatile
+          history: keep_last
+          reliability: best_effort
+      /parameter_events:
+        publisher:
+          depth: 1000
+          durability: volatile
+          history: keep_last
+          reliability: reliable
+    simple_int_param: 30
+    simple_string_param: ROS 2
+    use_sim_time: true
+
+[exit code: 0]
+--- node log
+[INFO] [1790569328.983457774] [simple_parameter]: Param simple_int_param changed! New value is 30
+[INFO] [1790569339.419555073] [simple_parameter]: Param simple_string_param changed! New value is ROS 2
+[INFO] [1790569392.234915404] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+
+# start-up override from the command line
+
+$ ros2 param get /simple_parameter simple_int_param --no-daemon --spin-time 5
+Integer value is: 42
+[exit code: 0]

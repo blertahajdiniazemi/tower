@@ -1,0 +1,7 @@
+schema: ros-infrastructure/rep@11ca24a41f31480dfb9562ba99f2a5b93d3ebda5 xsd/package_format3.xsd
+$ xmllint --noout --schema package_format3.xsd arduinobot_cpp_examples/package.xml
+./../../arduinobot_ws/src/arduinobot_cpp_examples/package.xml validates
+$ xmllint --noout --schema package_format3.xsd arduinobot_description/package.xml
+./../../arduinobot_ws/src/arduinobot_description/package.xml validates
+$ xmllint --noout --schema package_format3.xsd arduinobot_py_examples/package.xml
+./../../arduinobot_ws/src/arduinobot_py_examples/package.xml validates

@@ -1,0 +1,627 @@
+{
+ "robot": "arduinobot",
+ "links": [
+  "world",
+  "base_link",
+  "base_plate",
+  "forward_drive_arm",
+  "horizontal_arm",
+  "claw_support",
+  "gripper_right",
+  "gripper_left"
+ ],
+ "joints": [
+  {
+   "name": "virtual_joint",
+   "type": "fixed",
+   "parent": "world",
+   "child": "base_link",
+   "xyz": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": null,
+   "limit": null,
+   "mimic": null
+  },
+  {
+   "name": "joint_1",
+   "type": "revolute",
+   "parent": "base_link",
+   "child": "base_plate",
+   "xyz": [
+    0.0,
+    0.0,
+    0.307
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "limit": {
+    "lower": -1.570796326795,
+    "upper": 1.570796326795,
+    "effort": 30.0,
+    "velocity": 10.0
+   },
+   "mimic": null
+  },
+  {
+   "name": "joint_2",
+   "type": "revolute",
+   "parent": "base_plate",
+   "child": "forward_drive_arm",
+   "xyz": [
+    -0.02,
+    0.0,
+    0.35
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "limit": {
+    "lower": -1.570796326795,
+    "upper": 1.570796326795,
+    "effort": 30.0,
+    "velocity": 10.0
+   },
+   "mimic": null
+  },
+  {
+   "name": "joint_3",
+   "type": "revolute",
+   "parent": "forward_drive_arm",
+   "child": "horizontal_arm",
+   "xyz": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "limit": {
+    "lower": -1.570796326795,
+    "upper": 1.570796326795,
+    "effort": 30.0,
+    "velocity": 10.0
+   },
+   "mimic": null
+  },
+  {
+   "name": "horizontal_arm_to_claw_support",
+   "type": "fixed",
+   "parent": "horizontal_arm",
+   "child": "claw_support",
+   "xyz": [
+    0.0,
+    0.82,
+    0.0
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": null,
+   "limit": null,
+   "mimic": null
+  },
+  {
+   "name": "joint_4",
+   "type": "revolute",
+   "parent": "claw_support",
+   "child": "gripper_right",
+   "xyz": [
+    -0.04,
+    0.13,
+    -0.1
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "limit": {
+    "lower": -1.570796326795,
+    "upper": 0.0,
+    "effort": 30.0,
+    "velocity": 10.0
+   },
+   "mimic": null
+  },
+  {
+   "name": "joint_5",
+   "type": "revolute",
+   "parent": "claw_support",
+   "child": "gripper_left",
+   "xyz": [
+    -0.22,
+    0.13,
+    -0.1
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "limit": {
+    "lower": 0.0,
+    "upper": 1.570796326795,
+    "effort": 30.0,
+    "velocity": 10.0
+   },
+   "mimic": {
+    "joint": "joint_4",
+    "multiplier": -1.0,
+    "offset": 0.0
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "link": "base_link",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/basement.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.5,
+    -0.5,
+    0.0
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/basement.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 20190,
+    "min": [
+     0.4750192165374756,
+     0.5273483991622925,
+     -5.711760298246542e-18
+    ],
+    "max": [
+     95.14962768554688,
+     87.984130859375,
+     31.0
+    ]
+   },
+   "scaled_size_m": [
+    0.946746084690094,
+    0.8745678246021271,
+    0.31
+   ]
+  },
+  {
+   "link": "base_link",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/basement.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.5,
+    -0.5,
+    0.0
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/basement.STL"
+  },
+  {
+   "link": "base_plate",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/base_plate.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.39,
+    -0.39,
+    -0.56
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/base_plate.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 54090,
+    "min": [
+     0.0,
+     0.0,
+     56.60000228881836
+    ],
+    "max": [
+     71.99999237060547,
+     76.59999084472656,
+     113.72999572753906
+    ]
+   },
+   "scaled_size_m": [
+    0.7199999237060547,
+    0.7659999084472656,
+    0.571299934387207
+   ]
+  },
+  {
+   "link": "base_plate",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/base_plate.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.39,
+    -0.39,
+    -0.56
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/base_plate.STL"
+  },
+  {
+   "link": "forward_drive_arm",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/forward_drive_arm.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    0.19,
+    0.06,
+    -0.08
+   ],
+   "origin_rpy": [
+    0.0,
+    -1.570796326795,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/forward_drive_arm.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 42672,
+    "min": [
+     0.07554364204406738,
+     0.17499923706054688,
+     0.07499941438436508
+    ],
+    "max": [
+     92.53348541259766,
+     29.174999237060547,
+     15.072824478149414
+    ]
+   },
+   "scaled_size_m": [
+    0.9245794177055359,
+    0.29,
+    0.1499782506376505
+   ]
+  },
+  {
+   "link": "forward_drive_arm",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/forward_drive_arm.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    0.19,
+    0.06,
+    -0.08
+   ],
+   "origin_rpy": [
+    0.0,
+    -1.570796326795,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/forward_drive_arm.STL"
+  },
+  {
+   "link": "horizontal_arm",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/horizontal_arm.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.03,
+    -0.4,
+    -0.06
+   ],
+   "origin_rpy": [
+    1.570796326795,
+    0.0,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/horizontal_arm.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 34824,
+    "min": [
+     0.07506227493286133,
+     0.07524946331977844,
+     0.039999838918447495
+    ],
+    "max": [
+     127.57499694824219,
+     15.074999809265137,
+     8.039999961853027
+    ]
+   },
+   "scaled_size_m": [
+    1.2749993467330933,
+    0.1499975034594536,
+    0.0800000012293458
+   ]
+  },
+  {
+   "link": "horizontal_arm",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/horizontal_arm.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.03,
+    -0.4,
+    -0.06
+   ],
+   "origin_rpy": [
+    1.570796326795,
+    0.0,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/horizontal_arm.STL"
+  },
+  {
+   "link": "claw_support",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/claw_support.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    0.0,
+    -0.05,
+    -0.15
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/claw_support.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 11818,
+    "min": [
+     0.059999991208314896,
+     0.1250002533197403,
+     0.149999737739563
+    ],
+    "max": [
+     54.060001373291016,
+     25.125,
+     38.3787956237793
+    ]
+   },
+   "scaled_size_m": [
+    0.5400000138208271,
+    0.2499999974668026,
+    0.38228795886039735
+   ]
+  },
+  {
+   "link": "claw_support",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/claw_support.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    0.0,
+    -0.05,
+    -0.15
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/claw_support.STL"
+  },
+  {
+   "link": "gripper_right",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/right_finger.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.1,
+    0.5,
+    -0.1
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    -1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/right_finger.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 1974,
+    "min": [
+     5.960463909104874e-07,
+     0.015166393481194973,
+     0.04499989002943039
+    ],
+    "max": [
+     58.4168701171875,
+     14.031789779663086,
+     9.045000076293945
+    ]
+   },
+   "scaled_size_m": [
+    0.5841686952114111,
+    0.14016623386181892,
+    0.09000000186264515
+   ]
+  },
+  {
+   "link": "gripper_right",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/right_finger.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.1,
+    0.5,
+    -0.1
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    -1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/right_finger.STL"
+  },
+  {
+   "link": "gripper_left",
+   "element": "visual",
+   "uri": "package://arduinobot_description/meshes/left_finger.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.04,
+    0.5,
+    -0.1
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    -1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/left_finger.STL",
+   "stl": {
+    "format": "binary",
+    "triangles": 1964,
+    "min": [
+     5.960466182841628e-07,
+     0.12500032782554626,
+     0.04499989002943039
+    ],
+    "max": [
+     58.4168701171875,
+     14.625000953674316,
+     9.045000076293945
+    ]
+   },
+   "scaled_size_m": [
+    0.5841686952114088,
+    0.14500000625848772,
+    0.09000000186264515
+   ]
+  },
+  {
+   "link": "gripper_left",
+   "element": "collision",
+   "uri": "package://arduinobot_description/meshes/left_finger.STL",
+   "scale": [
+    0.01,
+    0.01,
+    0.01
+   ],
+   "origin_xyz": [
+    -0.04,
+    0.5,
+    -0.1
+   ],
+   "origin_rpy": [
+    0.0,
+    0.0,
+    -1.570796326795
+   ],
+   "resolved": "/ws/install/arduinobot_description/share/arduinobot_description/meshes/left_finger.STL"
+  }
+ ],
+ "failures": []
+}

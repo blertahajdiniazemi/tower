@@ -1,0 +1,18 @@
+[INFO] [1790570358.008777794] [simple_publisher]: Publishing at 1 Hz
+Traceback (most recent call last):
+  File "/ws/install/arduinobot_py_examples/lib/arduinobot_py_examples/simple_publisher", line 33, in <module>
+    sys.exit(load_entry_point('arduinobot-py-examples==0.0.0', 'console_scripts', 'simple_publisher')())
+  File "/ws/install/arduinobot_py_examples/lib/python3.10/site-packages/arduinobot_py_examples/simple_publisher.py", line 28, in main
+    rclpy.spin(simple_publisher)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+[ros2run]: Process exited with failure 1

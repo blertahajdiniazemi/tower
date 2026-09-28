@@ -1,0 +1,218 @@
+
+================ Scenario py_to_cpp: arduinobot_py_examples/simple_publisher -> arduinobot_cpp_examples/simple_subscriber (ROS_DOMAIN_ID=21)
+
+$ ros2 node list --no-daemon --spin-time 5
+/simple_publisher
+/simple_subscriber
+[exit code: 0]
+
+$ ros2 topic list -t --no-daemon --spin-time 5
+/chatter [std_msgs/msg/String]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+[exit code: 0]
+
+$ ros2 topic info -v /chatter --no-daemon --spin-time 5
+Type: std_msgs/msg/String
+
+Publisher count: 1
+
+Node name: simple_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: PUBLISHER
+GID: 01.0f.7f.01.39.00.df.88.00.00.00.00.00.00.11.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: simple_subscriber
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.2b.00.88.fc.00.00.00.00.00.00.12.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+[exit code: 0]
+
+$ timeout -s INT 15 ros2 topic echo --once /chatter std_msgs/msg/String
+data: 'Hello ROS 2 - counter: 20'
+---
+[exit code: 0]
+
+$ timeout -s INT 12 ros2 topic hz /chatter --window 5
+average rate: 1.000
+	min: 1.000s max: 1.000s std dev: 0.00032s window: 3
+average rate: 1.000
+	min: 1.000s max: 1.000s std dev: 0.00029s window: 5
+average rate: 1.000
+	min: 1.000s max: 1.002s std dev: 0.00074s window: 5
+average rate: 1.000
+	min: 0.999s max: 1.002s std dev: 0.00094s window: 5
+average rate: 1.000
+	min: 0.999s max: 1.002s std dev: 0.00093s window: 5
+average rate: 1.000
+	min: 0.999s max: 1.000s std dev: 0.00058s window: 5
+[exit code: 124]
+
+--- publisher log
+[INFO] [1790569060.856159159] [simple_publisher]: Publishing at 1.0 Hz
+--- subscriber log
+[INFO] [1790569061.857421150] [simple_subscriber]: I heard: Hello ROS 2 - counter: 0
+[INFO] [1790569062.857274270] [simple_subscriber]: I heard: Hello ROS 2 - counter: 1
+[INFO] [1790569063.857329467] [simple_subscriber]: I heard: Hello ROS 2 - counter: 2
+[INFO] [1790569064.857378342] [simple_subscriber]: I heard: Hello ROS 2 - counter: 3
+[INFO] [1790569065.857513007] [simple_subscriber]: I heard: Hello ROS 2 - counter: 4
+[INFO] [1790569066.857229447] [simple_subscriber]: I heard: Hello ROS 2 - counter: 5
+[INFO] [1790569067.857409648] [simple_subscriber]: I heard: Hello ROS 2 - counter: 6
+[INFO] [1790569068.857306989] [simple_subscriber]: I heard: Hello ROS 2 - counter: 7
+[INFO] [1790569069.857105731] [simple_subscriber]: I heard: Hello ROS 2 - counter: 8
+[INFO] [1790569070.857343796] [simple_subscriber]: I heard: Hello ROS 2 - counter: 9
+[INFO] [1790569071.857366255] [simple_subscriber]: I heard: Hello ROS 2 - counter: 10
+[INFO] [1790569072.857369679] [simple_subscriber]: I heard: Hello ROS 2 - counter: 11
+[INFO] [1790569073.857324572] [simple_subscriber]: I heard: Hello ROS 2 - counter: 12
+[INFO] [1790569074.857395962] [simple_subscriber]: I heard: Hello ROS 2 - counter: 13
+[INFO] [1790569075.857534385] [simple_subscriber]: I heard: Hello ROS 2 - counter: 14
+[INFO] [1790569076.857269175] [simple_subscriber]: I heard: Hello ROS 2 - counter: 15
+[INFO] [1790569077.857281435] [simple_subscriber]: I heard: Hello ROS 2 - counter: 16
+[INFO] [1790569078.857241609] [simple_subscriber]: I heard: Hello ROS 2 - counter: 17
+[INFO] [1790569079.857448351] [simple_subscriber]: I heard: Hello ROS 2 - counter: 18
+[INFO] [1790569080.857753136] [simple_subscriber]: I heard: Hello ROS 2 - counter: 19
+[INFO] [1790569081.857389632] [simple_subscriber]: I heard: Hello ROS 2 - counter: 20
+[INFO] [1790569082.857251377] [simple_subscriber]: I heard: Hello ROS 2 - counter: 21
+[INFO] [1790569083.857419328] [simple_subscriber]: I heard: Hello ROS 2 - counter: 22
+[INFO] [1790569084.857208715] [simple_subscriber]: I heard: Hello ROS 2 - counter: 23
+[INFO] [1790569085.857478551] [simple_subscriber]: I heard: Hello ROS 2 - counter: 24
+[INFO] [1790569086.857284482] [simple_subscriber]: I heard: Hello ROS 2 - counter: 25
+[INFO] [1790569087.857308310] [simple_subscriber]: I heard: Hello ROS 2 - counter: 26
+[INFO] [1790569088.858801700] [simple_subscriber]: I heard: Hello ROS 2 - counter: 27
+[INFO] [1790569089.857398239] [simple_subscriber]: I heard: Hello ROS 2 - counter: 28
+[INFO] [1790569090.857467887] [simple_subscriber]: I heard: Hello ROS 2 - counter: 29
+[INFO] [1790569091.857676533] [simple_subscriber]: I heard: Hello ROS 2 - counter: 30
+[INFO] [1790569092.857238356] [simple_subscriber]: I heard: Hello ROS 2 - counter: 31
+[INFO] [1790569093.857341521] [simple_subscriber]: I heard: Hello ROS 2 - counter: 32
+[INFO] [1790569094.393901359] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+RESULT py_to_cpp: subscriber received 33 message(s); tracebacks in logs: 0
+
+================ Scenario cpp_to_py: arduinobot_cpp_examples/simple_publisher -> arduinobot_py_examples/simple_subscriber (ROS_DOMAIN_ID=22)
+
+$ ros2 node list --no-daemon --spin-time 5
+/simple_publisher
+/simple_subscriber
+[exit code: 0]
+
+$ ros2 topic list -t --no-daemon --spin-time 5
+/chatter [std_msgs/msg/String]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+[exit code: 0]
+
+$ ros2 topic info -v /chatter --no-daemon --spin-time 5
+Type: std_msgs/msg/String
+
+Publisher count: 1
+
+Node name: simple_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: PUBLISHER
+GID: 01.0f.7f.01.a3.00.b8.c2.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: simple_subscriber
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.95.00.4b.c2.00.00.00.00.00.00.11.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+[exit code: 0]
+
+$ timeout -s INT 15 ros2 topic echo --once /chatter std_msgs/msg/String
+data: Hello ROS 2 - counter:20
+---
+[exit code: 0]
+
+$ timeout -s INT 12 ros2 topic hz /chatter --window 5
+average rate: 0.999
+	min: 0.999s max: 1.002s std dev: 0.00158s window: 2
+average rate: 1.000
+	min: 0.998s max: 1.002s std dev: 0.00173s window: 4
+average rate: 1.000
+	min: 0.998s max: 1.002s std dev: 0.00152s window: 5
+average rate: 1.000
+	min: 0.998s max: 1.000s std dev: 0.00100s window: 5
+average rate: 1.000
+	min: 1.000s max: 1.000s std dev: 0.00009s window: 5
+average rate: 1.000
+	min: 1.000s max: 1.000s std dev: 0.00014s window: 5
+[exit code: 124]
+
+--- publisher log
+[INFO] [1790569096.745248090] [simple_publisher]: Publishing at 1 Hz
+[INFO] [1790569130.075204997] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+--- subscriber log
+[INFO] [1790569097.758432790] [simple_subscriber]: I heard: Hello ROS 2 - counter:0
+[INFO] [1790569098.746937253] [simple_subscriber]: I heard: Hello ROS 2 - counter:1
+[INFO] [1790569099.746749698] [simple_subscriber]: I heard: Hello ROS 2 - counter:2
+[INFO] [1790569100.746603478] [simple_subscriber]: I heard: Hello ROS 2 - counter:3
+[INFO] [1790569101.746726299] [simple_subscriber]: I heard: Hello ROS 2 - counter:4
+[INFO] [1790569102.746471133] [simple_subscriber]: I heard: Hello ROS 2 - counter:5
+[INFO] [1790569103.746620962] [simple_subscriber]: I heard: Hello ROS 2 - counter:6
+[INFO] [1790569104.746510576] [simple_subscriber]: I heard: Hello ROS 2 - counter:7
+[INFO] [1790569105.746795773] [simple_subscriber]: I heard: Hello ROS 2 - counter:8
+[INFO] [1790569106.756737186] [simple_subscriber]: I heard: Hello ROS 2 - counter:9
+[INFO] [1790569107.747019756] [simple_subscriber]: I heard: Hello ROS 2 - counter:10
+[INFO] [1790569108.746601903] [simple_subscriber]: I heard: Hello ROS 2 - counter:11
+[INFO] [1790569109.746831258] [simple_subscriber]: I heard: Hello ROS 2 - counter:12
+[INFO] [1790569110.746930261] [simple_subscriber]: I heard: Hello ROS 2 - counter:13
+[INFO] [1790569111.746482947] [simple_subscriber]: I heard: Hello ROS 2 - counter:14
+[INFO] [1790569112.746739211] [simple_subscriber]: I heard: Hello ROS 2 - counter:15
+[INFO] [1790569113.746981383] [simple_subscriber]: I heard: Hello ROS 2 - counter:16
+[INFO] [1790569114.746556545] [simple_subscriber]: I heard: Hello ROS 2 - counter:17
+[INFO] [1790569115.746805911] [simple_subscriber]: I heard: Hello ROS 2 - counter:18
+[INFO] [1790569116.746536648] [simple_subscriber]: I heard: Hello ROS 2 - counter:19
+[INFO] [1790569117.746606588] [simple_subscriber]: I heard: Hello ROS 2 - counter:20
+[INFO] [1790569118.746696232] [simple_subscriber]: I heard: Hello ROS 2 - counter:21
+[INFO] [1790569119.746764658] [simple_subscriber]: I heard: Hello ROS 2 - counter:22
+[INFO] [1790569120.746831270] [simple_subscriber]: I heard: Hello ROS 2 - counter:23
+[INFO] [1790569121.746523771] [simple_subscriber]: I heard: Hello ROS 2 - counter:24
+[INFO] [1790569122.746507563] [simple_subscriber]: I heard: Hello ROS 2 - counter:25
+[INFO] [1790569123.746504872] [simple_subscriber]: I heard: Hello ROS 2 - counter:26
+[INFO] [1790569124.746603605] [simple_subscriber]: I heard: Hello ROS 2 - counter:27
+[INFO] [1790569125.746678065] [simple_subscriber]: I heard: Hello ROS 2 - counter:28
+[INFO] [1790569126.747082362] [simple_subscriber]: I heard: Hello ROS 2 - counter:29
+[INFO] [1790569127.746683921] [simple_subscriber]: I heard: Hello ROS 2 - counter:30
+[INFO] [1790569128.746854098] [simple_subscriber]: I heard: Hello ROS 2 - counter:31
+[INFO] [1790569129.746539342] [simple_subscriber]: I heard: Hello ROS 2 - counter:32
+RESULT cpp_to_py: subscriber received 33 message(s); tracebacks in logs: 0

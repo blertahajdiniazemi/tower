@@ -1,0 +1,26 @@
+digraph G {
+node [shape=box];
+"world" [label="world"];
+"base_link" [label="base_link"];
+"base_plate" [label="base_plate"];
+"forward_drive_arm" [label="forward_drive_arm"];
+"horizontal_arm" [label="horizontal_arm"];
+"claw_support" [label="claw_support"];
+"gripper_right" [label="gripper_right"];
+"gripper_left" [label="gripper_left"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"world" -> "virtual_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"virtual_joint" -> "base_link"
+"base_link" -> "joint_1" [label="xyz: 0 0 0.307 \nrpy: 0 -0 0"]
+"joint_1" -> "base_plate"
+"base_plate" -> "joint_2" [label="xyz: -0.02 0 0.35 \nrpy: 0 -0 0"]
+"joint_2" -> "forward_drive_arm"
+"forward_drive_arm" -> "joint_3" [label="xyz: 0 0 0.8 \nrpy: 0 -0 0"]
+"joint_3" -> "horizontal_arm"
+"horizontal_arm" -> "horizontal_arm_to_claw_support" [label="xyz: 0 0.82 0 \nrpy: 0 -0 0"]
+"horizontal_arm_to_claw_support" -> "claw_support"
+"claw_support" -> "joint_4" [label="xyz: -0.04 0.13 -0.1 \nrpy: 0 -0 0"]
+"joint_4" -> "gripper_right"
+"claw_support" -> "joint_5" [label="xyz: -0.22 0.13 -0.1 \nrpy: 0 -0 0"]
+"joint_5" -> "gripper_left"
+}

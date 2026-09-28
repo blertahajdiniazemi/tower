@@ -1,0 +1,2 @@
+$ grep -rnI -E "/home/|/root/|/Users/|C:\\\\" --include=*.py --include=*.xacro --include=*.urdf --include=*.rviz --include=*.xml --include=*.txt --include=*.cfg --include=*.cpp .
+[exit code: 1 (1 = no match)]

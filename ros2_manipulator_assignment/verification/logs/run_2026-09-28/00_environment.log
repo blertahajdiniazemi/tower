@@ -1,0 +1,83 @@
+
+$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.5 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+[exit code: 0]
+
+$ uname -srm
+Linux 6.18.44-fc-v37 x86_64
+[exit code: 0]
+
+ROS_DISTRO=humble  ROS_VERSION=2  RMW_IMPLEMENTATION=<default>
+
+$ python3 --version
+Python 3.10.12
+[exit code: 0]
+
+$ g++ --version
+g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[exit code: 0]
+
+$ cmake --version
+cmake version 3.22.1
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[exit code: 0]
+
+$ rosdep --version
+0.26.0
+[exit code: 0]
+
+$ bash -c dpkg-query -W -f='${Package} ${Version}\n' python3-colcon-core python3-colcon-ros python3-colcon-cmake python3-colcon-python-setup-py 2>/dev/null || pip3 list 2>/dev/null | grep -i colcon
+python3-colcon-cmake 0.2.30+upstream-1
+python3-colcon-core 0.21.1+upstream-1
+python3-colcon-python-setup-py 0.2.9-100
+python3-colcon-ros 0.5.0+upstream-1
+[exit code: 0]
+
+$ bash -c dpkg-query -W -f='${Package} ${Version}\n' ros-humble-rclcpp ros-humble-rclpy ros-humble-robot-state-publisher ros-humble-rviz2 ros-humble-tf2-ros ros-humble-urdf ros-humble-fastrtps ros-humble-rmw-fastrtps-cpp 2>/dev/null
+ros-humble-fastrtps 2.6.12-1jammy.20260723.233918
+ros-humble-rclcpp 16.0.19-1jammy.20260724.021311
+ros-humble-rclpy 3.3.21-1jammy.20260724.022150
+ros-humble-rmw-fastrtps-cpp 6.2.10-1jammy.20260724.002510
+ros-humble-robot-state-publisher 3.0.3-2jammy.20260804.200125
+ros-humble-rviz2 11.2.28-1jammy.20260804.222726
+ros-humble-tf2-ros 0.25.22-1jammy.20260804.155840
+ros-humble-urdf 2.6.1-1jammy.20260718.005320
+[exit code: 0]
+
+$ bash -c for p in xacro joint_state_publisher joint_state_publisher_gui; do echo "$p $(ros2 pkg prefix $p) $(grep -o '<version>[^<]*' $(ros2 pkg prefix $p)/share/$p/package.xml | cut -c10-)"; done
+xacro /opt/underlay/install 2.1.1
+joint_state_publisher /opt/underlay/install 2.4.0
+joint_state_publisher_gui /opt/underlay/install 2.4.0
+[exit code: 0]
+
+$ bash -c ros2 pkg prefix ros_gz_sim ros_gz_bridge 2>&1 | head -2
+usage: ros2 [-h] [--use-python-default-buffering]
+            Call `ros2 <command> -h` for more detailed usage. ...
+[exit code: 0]
+
+$ python3 -c from rclpy.utilities import get_rmw_implementation_identifier as g; print('default RMW implementation:', g())
+default RMW implementation: rmw_fastrtps_cpp
+[exit code: 0]
+
+$ bash -c which Xvfb xdotool import 2>/dev/null; echo DISPLAY=${DISPLAY:-<unset>}
+/usr/bin/Xvfb
+/usr/bin/xdotool
+/usr/bin/import
+DISPLAY=<unset>
+[exit code: 0]

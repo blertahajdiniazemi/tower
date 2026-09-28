@@ -1,0 +1,3 @@
+[INFO] [1790569328.983457774] [simple_parameter]: Param simple_int_param changed! New value is 30
+[INFO] [1790569339.419555073] [simple_parameter]: Param simple_string_param changed! New value is ROS 2
+[INFO] [1790569392.234915404] [rclcpp]: signal_handler(SIGINT/SIGTERM)

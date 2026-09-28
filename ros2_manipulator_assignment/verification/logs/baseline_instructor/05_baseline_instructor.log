@@ -1,0 +1,134 @@
+
+$ colcon build --event-handlers console_cohesion-
+Starting >>> arduinobot_cpp_examples
+Starting >>> arduinobot_description
+Starting >>> arduinobot_py_examples
+Finished <<< arduinobot_description [1.24s]
+Finished <<< arduinobot_py_examples [1.32s]
+Finished <<< arduinobot_cpp_examples [17.9s]
+
+Summary: 3 packages finished [18.1s]
+[exit code: 0]
+
+# Python publisher: start-up log and Ctrl+C behaviour
+[INFO] [1790570358.008777794] [simple_publisher]: Publishing at 1 Hz
+Traceback (most recent call last):
+  File "/ws/install/arduinobot_py_examples/lib/arduinobot_py_examples/simple_publisher", line 33, in <module>
+    sys.exit(load_entry_point('arduinobot-py-examples==0.0.0', 'console_scripts', 'simple_publisher')())
+  File "/ws/install/arduinobot_py_examples/lib/python3.10/site-packages/arduinobot_py_examples/simple_publisher.py", line 28, in main
+    rclpy.spin(simple_publisher)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+[ros2run]: Process exited with failure 1
+
+# Python simple_parameter: updates of the node's own and of a standard parameter
+
+$ ros2 param set /simple_parameter simple_int_param 30 --no-daemon --spin-time 5
+Set parameter successful
+[exit code: 0]
+
+$ ros2 param set /simple_parameter use_sim_time true --no-daemon --spin-time 5
+Setting parameter failed
+[exit code: 0]
+
+$ ros2 param get /simple_parameter use_sim_time --no-daemon --spin-time 5
+Boolean value is: False
+[exit code: 0]
+
+$ ros2 service call /simple_parameter/set_parameters_atomically rcl_interfaces/srv/SetParametersAtomically {parameters: [{name: simple_int_param, value: {type: 2, integer_value: 6}}, {name: use_sim_time, value: {type: 1, bool_value: true}}]}
+requester: making request: rcl_interfaces.srv.SetParametersAtomically_Request(parameters=[rcl_interfaces.msg.Parameter(name='simple_int_param', value=rcl_interfaces.msg.ParameterValue(type=2, bool_value=False, integer_value=6, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[])), rcl_interfaces.msg.Parameter(name='use_sim_time', value=rcl_interfaces.msg.ParameterValue(type=1, bool_value=True, integer_value=0, double_value=0.0, string_value='', byte_array_value=[], bool_array_value=[], integer_array_value=[], double_array_value=[], string_array_value=[]))])
+
+response:
+rcl_interfaces.srv.SetParametersAtomically_Response(result=rcl_interfaces.msg.SetParametersResult(successful=True, reason=''))
+
+[exit code: 0]
+
+$ ros2 param get /simple_parameter use_sim_time --no-daemon --spin-time 5
+Boolean value is: True
+[exit code: 0]
+[process group 305 still running after 10 s -> SIGKILL]
+
+# C++ simple_parameter
+
+$ ros2 param set /simple_parameter use_sim_time true --no-daemon --spin-time 5
+Setting parameter failed
+[exit code: 0]
+
+# stale RViz entries: links named in display.rviz but absent from the URDF
+
+$ bash -c grep -o '<link name="[a-z_]*"' /out/05_instructor.urdf | cut -d'"' -f2 | sort > /tmp/urdf_links; grep -n 'tool_link' install/arduinobot_description/share/arduinobot_description/rviz/display.rviz; grep -c tool_link /tmp/urdf_links
+56:        tool_link:
+75:                      tool_link:
+132:        tool_link:
+0
+[exit code: 1]
+
+$ grep -n -A3 Description Topic install/arduinobot_description/share/arduinobot_description/rviz/display.rviz
+84:      Description Topic:
+85-        Depth: 5
+86-        Durability Policy: Volatile
+87-        History Policy: Keep Last
+[exit code: 0]
+
+# late-joining RViz with the ORIGINAL display.rviz (Description Topic durability 'Volatile')
+
+$ ros2 topic info -v /robot_description --no-daemon --spin-time 5
+Type: std_msgs/msg/String
+
+Publisher count: 1
+
+Node name: robot_state_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: PUBLISHER
+GID: 01.0f.7f.01.fc.01.7e.db.00.00.00.00.00.00.14.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: joint_state_publisher
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.07.02.c1.f2.00.00.00.00.00.00.11.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: rviz
+Node namespace: /
+Topic type: std_msgs/msg/String
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.7f.01.13.02.8a.55.00.00.00.00.00.00.16.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+[exit code: 0]
+screenshot: 05_late_join_original_config.png
